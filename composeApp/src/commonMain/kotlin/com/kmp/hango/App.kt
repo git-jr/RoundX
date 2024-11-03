@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
@@ -23,6 +24,7 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.kmp.hango.components.HomeBottomBar
 import com.kmp.hango.components.bottomItems
+import com.kmp.hango.navigation.Routes
 
 @Composable
 fun App() {
@@ -45,33 +47,33 @@ fun HomeScreen(
                 externalIndex = currentRouteIndex,
                 onItemSelected = { item, index ->
                     currentRouteIndex = index
-                    navController.navigate(item.title)
+                    navController.navigate(item.route)
                 }
             )
         },
     ) { paddingValues ->
         Column(
-            modifier = modifier.fillMaxSize(),
+            modifier = modifier.fillMaxSize().padding(paddingValues),
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
             NavHost(
                 navController = navController,
-                startDestination = bottomItems[0].title,
+                startDestination = Routes.MainLis,
                 modifier = modifier,
                 enterTransition = { fadeIn(tween(200)) },
                 exitTransition = { fadeOut(tween(200)) },
             ) {
-                composable(bottomItems[0].title) {
+                composable<Routes.MainLis> {
                     MainListScreen()
                 }
-                composable(bottomItems[1].title) {
+                composable<Routes.Search> {
                     SearchScreen()
                 }
-                composable(bottomItems[2].title) {
+                composable<Routes.Orders> {
                     OrderScreen()
                 }
-                composable(bottomItems[3].title) {
+                composable<Routes.Profile> {
                     ProfileScreen()
                 }
             }

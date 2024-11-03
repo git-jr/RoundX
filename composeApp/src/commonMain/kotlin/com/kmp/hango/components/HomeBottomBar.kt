@@ -20,6 +20,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
+import com.kmp.hango.navigation.Routes
 
 
 @Composable
@@ -57,12 +58,13 @@ fun HomeBottomBar(
 data class BottomItem(
     val title: String,
     val enabledIcon: ImageVector,
-    val disabledIcon: ImageVector
+    val disabledIcon: ImageVector,
+    val route: Routes
 )
 
 val bottomItems = listOf(
-    BottomItem("Home", Icons.Filled.Home, Icons.Outlined.Home),
-    BottomItem("Search", Icons.Filled.Search, Icons.Outlined.Search),
-    BottomItem("Orders", Icons.Filled.Menu, Icons.Outlined.Menu),
-    BottomItem("Profile", Icons.Filled.Person, Icons.Outlined.Person),
+    BottomItem("Home", Icons.Filled.Home, Icons.Outlined.Home, Routes.MainLis),
+    BottomItem("Search", Icons.Filled.Search, Icons.Outlined.Search, Routes.Search),
+    BottomItem("Orders", Icons.Filled.Menu, Icons.Outlined.Menu, Routes.Orders),
+    BottomItem("Profile", Icons.Filled.Person, Icons.Outlined.Person, Routes.Profile)
 )
