@@ -22,13 +22,23 @@ import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import coil3.ImageLoader
+import coil3.annotation.ExperimentalCoilApi
+import coil3.compose.setSingletonImageLoaderFactory
+import coil3.request.crossfade
 import com.kmp.hango.components.HomeBottomBar
-import com.kmp.hango.components.bottomItems
 import com.kmp.hango.navigation.Routes
+import com.kmp.hango.ui.InitScreen
 
+@OptIn(ExperimentalCoilApi::class)
 @Composable
 fun App() {
     MaterialTheme {
+        setSingletonImageLoaderFactory { context ->
+            ImageLoader.Builder(context)
+                .crossfade(true)
+                .build()
+        }
         HomeScreen()
     }
 }
@@ -59,13 +69,13 @@ fun HomeScreen(
         ) {
             NavHost(
                 navController = navController,
-                startDestination = Routes.MainLis,
+                startDestination = Routes.Init,
                 modifier = modifier,
                 enterTransition = { fadeIn(tween(200)) },
                 exitTransition = { fadeOut(tween(200)) },
             ) {
-                composable<Routes.MainLis> {
-                    MainListScreen()
+                composable<Routes.Init> {
+                    InitScreen()
                 }
                 composable<Routes.Search> {
                     SearchScreen()
@@ -81,17 +91,6 @@ fun HomeScreen(
     }
 }
 
-
-@Composable
-fun MainListScreen(modifier: Modifier = Modifier) {
-    Column(
-        modifier = modifier.fillMaxWidth(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        Text("Home")
-    }
-}
 
 @Composable
 fun SearchScreen(modifier: Modifier = Modifier) {

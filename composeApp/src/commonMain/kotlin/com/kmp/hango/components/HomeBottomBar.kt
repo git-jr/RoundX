@@ -63,7 +63,7 @@ data class BottomItem(
 )
 
 val bottomItems = listOf(
-    BottomItem("Home", Icons.Filled.Home, Icons.Outlined.Home, Routes.MainLis),
+    BottomItem("Home", Icons.Filled.Home, Icons.Outlined.Home, Routes.Init),
     BottomItem("Search", Icons.Filled.Search, Icons.Outlined.Search, Routes.Search),
     BottomItem("Orders", Icons.Filled.Menu, Icons.Outlined.Menu, Routes.Orders),
     BottomItem("Profile", Icons.Filled.Person, Icons.Outlined.Person, Routes.Profile)
