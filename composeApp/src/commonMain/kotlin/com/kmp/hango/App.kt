@@ -29,6 +29,7 @@ import coil3.request.crossfade
 import com.kmp.hango.components.HomeBottomBar
 import com.kmp.hango.navigation.Routes
 import com.kmp.hango.ui.InitScreen
+import com.kmp.hango.ui.game.GameScreen
 
 @OptIn(ExperimentalCoilApi::class)
 @Composable
@@ -75,7 +76,9 @@ fun HomeScreen(
                 exitTransition = { fadeOut(tween(200)) },
             ) {
                 composable<Routes.Init> {
-                    InitScreen()
+                    InitScreen(onNavigateGame = {
+                        navController.navigate(Routes.Game(it))
+                    })
                 }
                 composable<Routes.Search> {
                     SearchScreen()
@@ -85,6 +88,10 @@ fun HomeScreen(
                 }
                 composable<Routes.Profile> {
                     ProfileScreen()
+                }
+
+                composable<Routes.Game> {
+                    GameScreen()
                 }
             }
         }
