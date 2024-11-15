@@ -36,7 +36,7 @@ import com.kmp.hango.respository.categorySample
 @Composable
 fun InitScreen(
     modifier: Modifier = Modifier,
-    onNavigateGame: (String) -> Unit
+    onNavigateCategoryDetail: (String) -> Unit
 ) {
     Scaffold(
         topBar = {
@@ -72,7 +72,7 @@ fun InitScreen(
                     .fillMaxSize()
                     .padding(paddingValues)
             ) {
-                CategoryList { onNavigateGame(it) }
+                CategoryList { onNavigateCategoryDetail(it) }
             }
         }
     )

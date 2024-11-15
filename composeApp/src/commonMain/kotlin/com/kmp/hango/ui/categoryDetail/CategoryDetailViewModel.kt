@@ -1,4 +1,4 @@
-package com.kmp.hango.ui.game
+package com.kmp.hango.ui.categoryDetail
 
 import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
@@ -8,15 +8,15 @@ import com.kmp.hango.respository.categorySample
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
-class GameViewModel(
+class CategoryDetailViewModel(
     savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
-    private val _uiState = MutableStateFlow(GameUiState())
+    private val _uiState = MutableStateFlow(CategoryDetailUiState())
     var uiState = _uiState.asStateFlow()
 
     init {
-        val categoryId: String = savedStateHandle.toRoute<Routes.Game>().categoryId
+        val categoryId: String = savedStateHandle.toRoute<Routes.CategoryDetail>().categoryId
         categorySample.find { it.id == categoryId }?.let {
             _uiState.value = _uiState.value.copy(category = it)
         }

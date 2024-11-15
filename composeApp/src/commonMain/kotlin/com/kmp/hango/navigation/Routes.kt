@@ -16,6 +16,6 @@ sealed class Routes {
     data object Profile : Routes()
 
     @Serializable
-    data class Game(val categoryId: String) : Routes()
+    data class CategoryDetail(val categoryId: String) : Routes()
 
 }
