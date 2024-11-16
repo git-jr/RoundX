@@ -45,122 +45,136 @@ fun GameScreen(modifier: Modifier = Modifier) {
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.SpaceBetween,
     ) {
-        state.category?.let {
-            Column(
-                horizontalAlignment = Alignment.CenterHorizontally,
-            ) {
+        if (state.isGameFinished) {
+            Text("Fim do jogo", color = Color.White, fontSize = 24.sp)
+            return@Column
+        } else {
+            GameInProgress(modifier, state, bgColor, viewModel)
+        }
 
-                Row(
-                    horizontalArrangement = Arrangement.Center,
-                    verticalAlignment = Alignment.CenterVertically,
-                    modifier = modifier
-                        .padding(64.dp, 32.dp)
-                        .clip(shape = RoundedCornerShape(25.dp))
-                        .border(
-                            width = 4.dp,
-                            color = Color.White,
-                            shape = RoundedCornerShape(25.dp)
-                        )
-                ) {
-                    Row(
-                        modifier
-                            .weight(0.5f)
-                            .padding(8.dp),
-                        horizontalArrangement = Arrangement.Center,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(
-                            "03/09",
-                            color = Color.White,
-                            fontSize = 24.sp,
-                            fontWeight = FontWeight.Bold,
-                        )
-                    }
+    }
+}
 
-                    Row(
-                        modifier
-                            .weight(0.5f)
-                            .background(Color.White)
-                            .padding(8.dp),
-                        horizontalArrangement = Arrangement.Center,
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Text(
-                            "00:36",
-                            color = bgColor,
-                            fontSize = 24.sp,
-                            fontWeight = FontWeight.Bold,
-                        )
-                    }
-                }
-
-                AsyncImage(
-                    "https://raw.githubusercontent.com/git-jr/sample-files/refs/heads/main/profile%20pics/profile_pic_emoji_1.png",
-                    contentDescription = "Imagem da pergunta",
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier
-                        .border(
-                            width = 4.dp,
-                            color = Color.White,
-                            shape = RoundedCornerShape(25.dp)
-                        )
-                        .fillMaxWidth()
-                        .height(200.dp)
-                        .clip(shape = RoundedCornerShape(25.dp)),
-                )
-
-                Spacer(modifier = Modifier.padding(16.dp))
-                Text(
-                    "O Brasil foi descoberto em 1500 por Pedro Álvares Cabral",
+@Composable
+private fun GameInProgress(
+    modifier: Modifier,
+    state: GameUiState,
+    bgColor: Color,
+    viewModel: GameViewModel
+) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        Row(
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = modifier
+                .padding(64.dp, 32.dp)
+                .clip(shape = RoundedCornerShape(25.dp))
+                .border(
+                    width = 4.dp,
                     color = Color.White,
-                    fontSize = 16.sp,
-                    textAlign = TextAlign.Center
+                    shape = RoundedCornerShape(25.dp)
+                )
+        ) {
+            Row(
+                modifier
+                    .weight(0.5f)
+                    .padding(8.dp),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    state.currentCount,
+                    color = Color.White,
+                    fontSize = 24.sp,
+                    fontWeight = FontWeight.Bold,
                 )
             }
 
             Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
+                modifier
+                    .weight(0.5f)
+                    .background(Color.White)
+                    .padding(8.dp),
+                horizontalArrangement = Arrangement.Center,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Button(
-                    onClick = {},
-                    modifier = Modifier.size(150.dp),
-                    shape = RoundedCornerShape(25.dp),
-                    border = BorderStroke(
-                        color = Color(0XFF8c1c3a),
-                        width = 6.dp
-                    ),
-                    colors = ButtonDefaults.buttonColors(
-                        backgroundColor = Color(0XFFff235e),
-                        contentColor = Color(0XFF8c1c3a)
-                    ),
-                    elevation = ButtonDefaults.elevation(defaultElevation = 0.dp)
-                ) {
-                    Text("X", fontSize = 24.sp)
-                }
-
-                Spacer(modifier = Modifier.size(16.dp))
-
-                Button(
-                    onClick = {
-                    },
-                    modifier = Modifier.size(150.dp),
-                    shape = RoundedCornerShape(25.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        backgroundColor = Color(0XFF68ffa8),
-                        contentColor = Color(0XFF1f5b39)
-                    ),
-                    border = BorderStroke(
-                        color = Color(0XFF1f5b39),
-                        width = 6.dp
-                    ),
-                    elevation = ButtonDefaults.elevation(defaultElevation = 0.dp)
-                ) {
-                    Text("O", fontSize = 24.sp)
-                }
-
+                Text(
+                    "00:36",
+                    color = bgColor,
+                    fontSize = 24.sp,
+                    fontWeight = FontWeight.Bold,
+                )
             }
         }
+
+        AsyncImage(
+            "https://raw.githubusercontent.com/git-jr/sample-files/refs/heads/main/profile%20pics/profile_pic_emoji_1.png",
+            contentDescription = "Imagem da pergunta",
+            contentScale = ContentScale.Crop,
+            modifier = Modifier
+                .border(
+                    width = 4.dp,
+                    color = Color.White,
+                    shape = RoundedCornerShape(25.dp)
+                )
+                .fillMaxWidth()
+                .height(200.dp)
+                .clip(shape = RoundedCornerShape(25.dp)),
+        )
+
+        Spacer(modifier = Modifier.padding(16.dp))
+        Text(
+            state.currentQuestion?.content.toString(),
+            color = Color.White,
+            fontSize = 16.sp,
+            textAlign = TextAlign.Center
+        )
+    }
+
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Button(
+            onClick = { viewModel.answerQuestion(false) },
+            modifier = Modifier.size(150.dp),
+            shape = RoundedCornerShape(25.dp),
+            border = BorderStroke(
+                color = Color(0XFF8c1c3a),
+                width = 6.dp
+            ),
+            colors = ButtonDefaults.buttonColors(
+                backgroundColor = Color(0XFFff235e),
+                contentColor = Color(0XFF8c1c3a)
+            ),
+            elevation = ButtonDefaults.elevation(defaultElevation = 0.dp)
+        ) {
+            Text("X", fontSize = 24.sp)
+        }
+
+        Spacer(modifier = Modifier.size(16.dp))
+
+        Button(
+            onClick = {
+                viewModel.answerQuestion(true)
+            },
+            modifier = Modifier.size(150.dp),
+            shape = RoundedCornerShape(25.dp),
+            colors = ButtonDefaults.buttonColors(
+                backgroundColor = Color(0XFF68ffa8),
+                contentColor = Color(0XFF1f5b39)
+            ),
+            border = BorderStroke(
+                color = Color(0XFF1f5b39),
+                width = 6.dp
+            ),
+            elevation = ButtonDefaults.elevation(defaultElevation = 0.dp)
+        ) {
+            Text("O", fontSize = 24.sp)
+        }
+
     }
 }
