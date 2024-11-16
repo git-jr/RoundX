@@ -8,5 +8,8 @@ data class GameUiState(
     val answers: List<Boolean?> = emptyList(),
     val currentQuestionIndex: Int = 0,
     val currentCount: String = "1/5",
-    val isGameFinished: Boolean = false
+    val isGameFinished: Boolean = false,
+    val score: Int = 0,
+    val result: String = "",
+    val currentTime: Int = 0
 )
