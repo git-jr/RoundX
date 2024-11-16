@@ -12,6 +12,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -21,6 +22,7 @@ import androidx.compose.ui.Modifier
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
+import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import coil3.ImageLoader
 import coil3.annotation.ExperimentalCoilApi
@@ -30,6 +32,8 @@ import com.kmp.hango.components.HomeBottomBar
 import com.kmp.hango.navigation.Routes
 import com.kmp.hango.ui.InitScreen
 import com.kmp.hango.ui.categoryDetail.CategoryDetailScreen
+import com.kmp.hango.ui.game.GameScreen
+import kotlinx.serialization.ExperimentalSerializationApi
 
 @OptIn(ExperimentalCoilApi::class)
 @Composable
@@ -44,23 +48,39 @@ fun App() {
     }
 }
 
+@OptIn(ExperimentalSerializationApi::class)
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
     navController: NavHostController = rememberNavController()
 ) {
     var currentRouteIndex by remember { mutableStateOf(0) }
+    val currentRoute by navController.currentBackStackEntryAsState()
+    val currentRouteName = currentRoute?.destination?.route
+
+    var showBottomBar by remember { mutableStateOf(true) }
+
+    LaunchedEffect(currentRouteName) {
+        currentRouteName?.let {
+            val gameRoute = Routes.Game.serializer().descriptor.serialName
+            val route = it.substringBefore("/")
+            showBottomBar = route != gameRoute
+        }
+    }
+
 
     Scaffold(
         modifier = modifier,
         bottomBar = {
-            HomeBottomBar(
-                externalIndex = currentRouteIndex,
-                onItemSelected = { item, index ->
-                    currentRouteIndex = index
-                    navController.navigate(item.route)
-                }
-            )
+            if (showBottomBar) {
+                HomeBottomBar(
+                    externalIndex = currentRouteIndex,
+                    onItemSelected = { item, index ->
+                        currentRouteIndex = index
+                        navController.navigate(item.route)
+                    }
+                )
+            }
         },
     ) { paddingValues ->
         Column(
@@ -70,7 +90,8 @@ fun HomeScreen(
         ) {
             NavHost(
                 navController = navController,
-                startDestination = Routes.Init,
+//                startDestination = Routes.Init,
+                startDestination = Routes.Game("123"),
                 modifier = modifier,
                 enterTransition = { fadeIn(tween(200)) },
                 exitTransition = { fadeOut(tween(200)) },
@@ -92,8 +113,12 @@ fun HomeScreen(
 
                 composable<Routes.CategoryDetail> {
                     CategoryDetailScreen(
-                        onNavigateGame = { navController.navigate(Routes.CategoryDetail(it)) }
+                        onNavigateGame = { navController.navigate(Routes.Game(it)) }
                     )
+                }
+
+                composable<Routes.Game> {
+                    GameScreen()
                 }
             }
         }

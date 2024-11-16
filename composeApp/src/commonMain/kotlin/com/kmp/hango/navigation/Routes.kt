@@ -18,4 +18,7 @@ sealed class Routes {
     @Serializable
     data class CategoryDetail(val categoryId: String) : Routes()
 
+    @Serializable
+    data class Game(val categoryId: String) : Routes()
+
 }
