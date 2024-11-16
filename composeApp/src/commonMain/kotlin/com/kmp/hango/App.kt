@@ -3,19 +3,23 @@ package com.kmp.hango
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
+import androidx.compose.material3.ElevatedButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -26,7 +30,12 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
@@ -44,6 +53,8 @@ import com.kmp.hango.ui.game.GameScreen
 import io.kamel.image.KamelImage
 import io.kamel.image.asyncPainterResource
 import kotlinx.serialization.ExperimentalSerializationApi
+import network.chaintech.composeMultiplatformScreenCapture.ScreenCaptureComposable
+import network.chaintech.composeMultiplatformScreenCapture.rememberScreenCaptureController
 
 @OptIn(ExperimentalCoilApi::class)
 @Composable
@@ -55,22 +66,107 @@ fun App() {
                 .build()
         }
 
-        Box(
-            modifier = Modifier.fillMaxSize().background(Color.White),
-            contentAlignment = Alignment.Center
+
+        val captureController = rememberScreenCaptureController()
+        var capturedImage by remember { mutableStateOf<ImageBitmap?>(null) }
+
+        ScreenCaptureComposable(
+            modifier = Modifier,
+            screenCaptureController = captureController,
+            shareImage = true,
+            onCaptured = { img: ImageBitmap?, throwable ->
+                if (img != null) {
+                    capturedImage = img
+                }
+
+                // Handle error
+                if (throwable != null) {
+                    println("Error ScreenCaptureComposable: $throwable")
+                }
+
+            }
         ) {
-            KamelImage(
-                resource = asyncPainterResource(data = "https://avatars.githubusercontent.com/u/35709152?v=4"),
-                contentDescription = "description",
+
+            Column(
                 modifier = Modifier
-                    .border(
-                        width = 4.dp,
-                        color = Color.White,
-                        shape = RoundedCornerShape(25.dp)
+                    .background(Color(0xFF1A1A1A))
+                    .fillMaxSize(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                Spacer(modifier = Modifier.size(32.dp))
+                Text(
+                    "Resultado",
+                    color = Color.White,
+                    fontSize = 24.sp,
+                    fontWeight = FontWeight.Bold
+                )
+
+                Spacer(modifier = Modifier.size(32.dp))
+
+                KamelImage(
+                    resource = asyncPainterResource(data = "https://raw.githubusercontent.com/git-jr/sample-files/refs/heads/main/profile%20pics/profile_pic_emoji_1.png"),
+                    contentDescription = "description",
+                    modifier = Modifier
+                        .border(
+                            width = 4.dp,
+                            color = Color.White,
+                            shape = RoundedCornerShape(25.dp)
+                        )
+                        .size(150.dp)
+                        .clip(shape = RoundedCornerShape(25.dp))
+                )
+
+
+//                AsyncImage(
+//                    "https://raw.githubusercontent.com/git-jr/sample-files/refs/heads/main/profile%20pics/profile_pic_emoji_1.png",
+//                    contentDescription = "Imagem da pergunta",
+//                    contentScale = ContentScale.Crop,
+//                    modifier = Modifier
+//                        .border(
+//                            width = 4.dp,
+//                            color = Color.White,
+//                            shape = RoundedCornerShape(25.dp)
+//                        )
+//                        .size(150.dp)
+//                        .clip(shape = RoundedCornerShape(25.dp)),
+//                )
+
+
+                capturedImage?.let { img ->
+                    Image(
+                        bitmap = img,
+                        contentDescription = "Imagem capturada",
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier
+                            .border(
+                                width = 4.dp,
+                                color = Color.White,
+                                shape = RoundedCornerShape(25.dp)
+                            )
+                            .size(200.dp)
+                            .clip(shape = RoundedCornerShape(25.dp)),
                     )
-                    .size(150.dp)
-                    .clip(shape = RoundedCornerShape(25.dp)),
-            )
+                }
+
+
+                ElevatedButton(
+                    modifier = Modifier
+                        .padding(top = 40.dp)
+                        .widthIn(min = 200.dp).align(Alignment.CenterHorizontally),
+                    onClick = {
+                        captureController.capture()
+                    },
+                    content = {
+                        Text(
+                            "Preview ScreenShot",
+                            style = TextStyle(fontSize = 16.sp),
+                            fontWeight = FontWeight.Bold
+                        )
+                    },
+                )
+
+            }
+
         }
 
 
