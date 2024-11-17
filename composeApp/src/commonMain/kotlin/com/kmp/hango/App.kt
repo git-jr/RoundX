@@ -87,34 +87,22 @@ fun App() {
             }
         ) {
 
-            Column(
-                modifier = Modifier
-                    .background(Color(0xFF1A1A1A))
-                    .fillMaxSize(),
-                horizontalAlignment = Alignment.CenterHorizontally,
-            ) {
-                Spacer(modifier = Modifier.size(32.dp))
-                Text(
-                    "Resultado",
-                    color = Color.White,
-                    fontSize = 24.sp,
-                    fontWeight = FontWeight.Bold
-                )
-
-                Spacer(modifier = Modifier.size(32.dp))
-
-                KamelImage(
-                    resource = asyncPainterResource(data = "https://raw.githubusercontent.com/git-jr/sample-files/refs/heads/main/profile%20pics/profile_pic_emoji_1.png"),
-                    contentDescription = "description",
+            MaterialTheme {
+                Column(
                     modifier = Modifier
-                        .border(
-                            width = 4.dp,
-                            color = Color.White,
-                            shape = RoundedCornerShape(25.dp)
-                        )
-                        .size(150.dp)
-                        .clip(shape = RoundedCornerShape(25.dp))
-                )
+                        .background(Color.Red)
+                        .fillMaxSize(),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                ) {
+                    Spacer(modifier = Modifier.size(32.dp))
+                    Text(
+                        "Resultado",
+                        color = Color.Red,
+                        fontSize = 24.sp,
+                        fontWeight = FontWeight.Bold
+                    )
+
+                    Spacer(modifier = Modifier.size(32.dp))
 
 
 //                AsyncImage(
@@ -132,41 +120,43 @@ fun App() {
 //                )
 
 
-                capturedImage?.let { img ->
-                    Image(
-                        bitmap = img,
-                        contentDescription = "Imagem capturada",
-                        contentScale = ContentScale.Crop,
+                    capturedImage?.let { img ->
+                        Image(
+                            bitmap = img,
+                            contentDescription = "Imagem capturada",
+                            contentScale = ContentScale.Crop,
+                            modifier = Modifier
+                                .border(
+                                    width = 4.dp,
+                                    color = Color.White,
+                                    shape = RoundedCornerShape(25.dp)
+                                )
+                                .size(200.dp)
+                                .clip(shape = RoundedCornerShape(25.dp)),
+                        )
+                    }
+
+
+                    ElevatedButton(
                         modifier = Modifier
-                            .border(
-                                width = 4.dp,
-                                color = Color.White,
-                                shape = RoundedCornerShape(25.dp)
+                            .padding(top = 40.dp)
+                            .widthIn(min = 200.dp).align(Alignment.CenterHorizontally),
+                        onClick = {
+                           // como chamar a função takeScreenshot() aqui?
+                            takeScreenshot()
+                        },
+                        content = {
+                            Text(
+                                "Preview ScreenShot",
+                                style = TextStyle(fontSize = 16.sp),
+                                fontWeight = FontWeight.Bold
                             )
-                            .size(200.dp)
-                            .clip(shape = RoundedCornerShape(25.dp)),
+                        },
                     )
+
                 }
 
-
-                ElevatedButton(
-                    modifier = Modifier
-                        .padding(top = 40.dp)
-                        .widthIn(min = 200.dp).align(Alignment.CenterHorizontally),
-                    onClick = {
-                        captureController.capture()
-                    },
-                    content = {
-                        Text(
-                            "Preview ScreenShot",
-                            style = TextStyle(fontSize = 16.sp),
-                            fontWeight = FontWeight.Bold
-                        )
-                    },
-                )
-
             }
-
         }
 
 
