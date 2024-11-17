@@ -3,7 +3,6 @@ package com.kmp.hango
 import kotlinx.cinterop.ExperimentalForeignApi
 import platform.UIKit.UIDevice
 import platform.UIKit.*
-
 import platform.CoreGraphics.*
 import kotlinx.cinterop.*
 
@@ -41,9 +40,31 @@ actual fun takeScreenshot() {
 
     // Salva a imagem no álbum de fotos
     if (image != null) {
-        UIImageWriteToSavedPhotosAlbum(image, null, null, null)
-        println("12345Tag: Screenshot salvo no álbum de fotos")
+// Codigo que salva na memoria interna
+//        UIImageWriteToSavedPhotosAlbum(image, null, null, null)
+//        println("12345Tag: Screenshot salvo no álbum de fotos")
+
+
+        // Apresenta a modal de compartilhamento com a imagem
+        presentShareSheet(image)
+        println("12345Tag: Screenshot compartilhado no álbum de fotos")
+
     } else {
         println("12345Tag: Falha ao capturar o screenshot")
     }
+}
+
+
+private fun presentShareSheet(image: UIImage) {
+    // Cria um array com os itens a serem compartilhados
+    val itemsToShare = listOf(image)
+
+    // Cria o UIActivityViewController com os itens
+    val activityViewController = UIActivityViewController(itemsToShare, null)
+
+    // Obtém o UIViewController atual para apresentar o activityViewController
+    val currentViewController = UIApplication.sharedApplication.keyWindow?.rootViewController ?: return
+
+    // Apresenta o activityViewController no thread principal
+    currentViewController.presentViewController(activityViewController, animated = true, completion = null)
 }
