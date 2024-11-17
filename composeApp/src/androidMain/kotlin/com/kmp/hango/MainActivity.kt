@@ -14,7 +14,7 @@ class MainActivity : ComponentActivity() {
         AppContext.apply { set(this@MainActivity) }
 
         setContent {
-            App()
+            App(this)
         }
     }
 }

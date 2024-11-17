@@ -14,7 +14,7 @@ class IOSPlatform : Platform {
 actual fun getPlatform(): Platform = IOSPlatform()
 
 @OptIn(ExperimentalForeignApi::class)
-actual fun takeScreenshot() {
+actual fun takeScreenshot(context: Any?) {
 
     // Inicia o contexto gráfico
 

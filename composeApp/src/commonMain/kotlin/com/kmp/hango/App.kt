@@ -58,7 +58,9 @@ import network.chaintech.composeMultiplatformScreenCapture.rememberScreenCapture
 
 @OptIn(ExperimentalCoilApi::class)
 @Composable
-fun App() {
+fun App(
+    currentActivity: Any? = null,
+) {
     MaterialTheme {
         setSingletonImageLoaderFactory { context ->
             ImageLoader.Builder(context)
@@ -142,8 +144,8 @@ fun App() {
                             .padding(top = 40.dp)
                             .widthIn(min = 200.dp).align(Alignment.CenterHorizontally),
                         onClick = {
-                           // como chamar a função takeScreenshot() aqui?
-                            takeScreenshot()
+                            // como chamar a função takeScreenshot() aqui?
+                            takeScreenshot(currentActivity)
                         },
                         content = {
                             Text(

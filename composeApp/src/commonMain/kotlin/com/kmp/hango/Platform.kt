@@ -6,4 +6,4 @@ interface Platform {
 
 expect fun getPlatform(): Platform
 
-expect fun takeScreenshot()
+expect fun takeScreenshot(context: Any? = null)
