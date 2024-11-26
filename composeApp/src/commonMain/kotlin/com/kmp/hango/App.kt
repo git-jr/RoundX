@@ -10,11 +10,14 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
@@ -55,6 +58,7 @@ import io.kamel.image.asyncPainterResource
 import kotlinx.serialization.ExperimentalSerializationApi
 import network.chaintech.composeMultiplatformScreenCapture.ScreenCaptureComposable
 import network.chaintech.composeMultiplatformScreenCapture.rememberScreenCaptureController
+import kotlin.reflect.KClass
 
 @OptIn(ExperimentalCoilApi::class)
 @Composable
@@ -62,107 +66,97 @@ fun App(
     currentActivity: Any? = null,
 ) {
     MaterialTheme {
-        setSingletonImageLoaderFactory { context ->
-            ImageLoader.Builder(context)
-                .crossfade(true)
-                .build()
-        }
-
-
-        val captureController = rememberScreenCaptureController()
-        var capturedImage by remember { mutableStateOf<ImageBitmap?>(null) }
-
-        ScreenCaptureComposable(
-            modifier = Modifier,
-            screenCaptureController = captureController,
-            shareImage = true,
-            onCaptured = { img: ImageBitmap?, throwable ->
-                if (img != null) {
-                    capturedImage = img
-                }
-
-                // Handle error
-                if (throwable != null) {
-                    println("Error ScreenCaptureComposable: $throwable")
-                }
-
-            }
-        ) {
-
-            MaterialTheme {
-                Column(
-                    modifier = Modifier
-                        .background(Color.Red)
-                        .fillMaxSize(),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                ) {
-                    Spacer(modifier = Modifier.size(32.dp))
-                    Text(
-                        "Resultado",
-                        color = Color.Red,
-                        fontSize = 24.sp,
-                        fontWeight = FontWeight.Bold
-                    )
-
-                    Spacer(modifier = Modifier.size(32.dp))
-
-
-//                AsyncImage(
-//                    "https://raw.githubusercontent.com/git-jr/sample-files/refs/heads/main/profile%20pics/profile_pic_emoji_1.png",
-//                    contentDescription = "Imagem da pergunta",
-//                    contentScale = ContentScale.Crop,
-//                    modifier = Modifier
-//                        .border(
-//                            width = 4.dp,
-//                            color = Color.White,
-//                            shape = RoundedCornerShape(25.dp)
-//                        )
-//                        .size(150.dp)
-//                        .clip(shape = RoundedCornerShape(25.dp)),
-//                )
-
-
-                    capturedImage?.let { img ->
-                        Image(
-                            bitmap = img,
-                            contentDescription = "Imagem capturada",
-                            contentScale = ContentScale.Crop,
-                            modifier = Modifier
-                                .border(
-                                    width = 4.dp,
-                                    color = Color.White,
-                                    shape = RoundedCornerShape(25.dp)
-                                )
-                                .size(200.dp)
-                                .clip(shape = RoundedCornerShape(25.dp)),
-                        )
-                    }
-
-
-                    ElevatedButton(
-                        modifier = Modifier
-                            .padding(top = 40.dp)
-                            .widthIn(min = 200.dp).align(Alignment.CenterHorizontally),
-                        onClick = {
-                            // como chamar a função takeScreenshot() aqui?
-                            takeScreenshot(currentActivity)
-                        },
-                        content = {
-                            Text(
-                                "Preview ScreenShot",
-                                style = TextStyle(fontSize = 16.sp),
-                                fontWeight = FontWeight.Bold
-                            )
-                        },
-                    )
-
-                }
-
-            }
-        }
-
+        printScreenTest(currentActivity)
 
 //        HomeScreen()
+    }
+}
+
+@OptIn(ExperimentalCoilApi::class)
+@Composable
+private fun printScreenTest(currentActivity: Any?) {
+    setSingletonImageLoaderFactory { context ->
+        ImageLoader.Builder(context)
+            .crossfade(true)
+            .build()
+    }
+
+
+    val captureController = rememberScreenCaptureController()
+    var capturedImage by remember { mutableStateOf<ImageBitmap?>(null) }
+
+    ScreenCaptureComposable(
+        modifier = Modifier,
+        screenCaptureController = captureController,
+        shareImage = true,
+        onCaptured = { img: ImageBitmap?, throwable ->
+            if (img != null) {
+                capturedImage = img
+            }
+
+            // Handle error
+            if (throwable != null) {
+                println("Error ScreenCaptureComposable: $throwable")
+            }
+
+        }
+    ) {
+
+        MaterialTheme {
+            Column(
+                modifier = Modifier
+                    .background(Color.Red)
+                    .fillMaxSize()
+                    .windowInsetsPadding(WindowInsets.safeDrawing),
+                horizontalAlignment = Alignment.CenterHorizontally,
+            ) {
+                Spacer(modifier = Modifier.size(32.dp))
+                Text(
+                    "Resultado",
+                    color = Color.Red,
+                    fontSize = 24.sp,
+                    fontWeight = FontWeight.Bold
+                )
+
+                Spacer(modifier = Modifier.size(32.dp))
+
+                capturedImage?.let { img ->
+                    Image(
+                        bitmap = img,
+                        contentDescription = "Imagem capturada",
+                        contentScale = ContentScale.Crop,
+                        modifier = Modifier
+                            .border(
+                                width = 4.dp,
+                                color = Color.White,
+                                shape = RoundedCornerShape(25.dp)
+                            )
+                            .size(200.dp)
+                            .clip(shape = RoundedCornerShape(25.dp)),
+                    )
+                }
+
+
+                ElevatedButton(
+                    modifier = Modifier
+                        .padding(top = 40.dp)
+                        .widthIn(min = 200.dp).align(Alignment.CenterHorizontally),
+                    onClick = {
+                        // como chamar a função takeScreenshot() aqui?
+                        takeScreenshot(currentActivity)
+                    },
+                    content = {
+                        Text(
+                            "Preview ScreenShot",
+                            style = TextStyle(fontSize = 16.sp),
+                            fontWeight = FontWeight.Bold
+                        )
+                    },
+                )
+
+            }
+
+        }
     }
 }
 
