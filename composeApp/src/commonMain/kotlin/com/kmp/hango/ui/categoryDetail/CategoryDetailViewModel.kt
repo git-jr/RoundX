@@ -9,14 +9,13 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
 class CategoryDetailViewModel(
-    savedStateHandle: SavedStateHandle
+//    savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(CategoryDetailUiState())
     var uiState = _uiState.asStateFlow()
 
-    init {
-        val categoryId: String = savedStateHandle.toRoute<Routes.CategoryDetail>().categoryId
+    fun prepareScreen(categoryId: String) {
         categorySample.find { it.id == categoryId }?.let {
             _uiState.value = _uiState.value.copy(category = it)
         }

@@ -22,8 +22,10 @@ import androidx.compose.material.Card
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.saveable.rememberSaveableStateHolder
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -38,8 +40,16 @@ import coil3.compose.AsyncImage
 import com.kmp.hango.extensions.toTime
 
 @Composable
-fun GameScreen(modifier: Modifier = Modifier) {
-    val viewModel = viewModel<GameViewModel>()
+fun GameScreen(
+    modifier: Modifier = Modifier,
+    categoryId: String
+) {
+    val viewModel: GameViewModel = viewModel { GameViewModel() }
+    LaunchedEffect(Unit) {
+        viewModel.prepareScreen(categoryId)
+    }
+
+//    val viewModel = viewModel<GameViewModel>()
     val state by viewModel.uiState.collectAsState()
 
     val bgColor = Color(0XFF19042D)

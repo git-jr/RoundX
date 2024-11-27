@@ -16,28 +16,11 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
 class GameViewModel(
-    savedStateHandle: SavedStateHandle
+//    savedStateHandle: SavedStateHandle
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(GameUiState())
     var uiState = _uiState.asStateFlow()
-
-    init {
-        val categoryId: String = savedStateHandle.toRoute<Routes.Game>().categoryId
-
-        questionSamples.filter { it.categoryId == categoryId }.let { questions ->
-            val questionsShuffled = questions.shuffled()
-            _uiState.value = _uiState.value.copy(
-                currentQuestion = questionsShuffled.first(),
-                questions = questionsShuffled,
-                currentQuestionIndex = 0,
-                currentCount = "01/${questionsShuffled.size.zeroRound()}",
-                answers = List(questionsShuffled.size) { null }
-            )
-        }
-
-        initTimer()
-    }
 
     private fun initTimer() {
         viewModelScope.launch {
@@ -91,6 +74,21 @@ class GameViewModel(
                 result = "$scoreFormatted - $timerFormatted"
             )
         }
+    }
+
+    fun prepareScreen(categoryId: String) {
+        questionSamples.filter { it.categoryId == categoryId }.let { questions ->
+            val questionsShuffled = questions.shuffled()
+            _uiState.value = _uiState.value.copy(
+                currentQuestion = questionsShuffled.first(),
+                questions = questionsShuffled,
+                currentQuestionIndex = 0,
+                currentCount = "01/${questionsShuffled.size.zeroRound()}",
+                answers = List(questionsShuffled.size) { null }
+            )
+        }
+
+        initTimer()
     }
 
 }

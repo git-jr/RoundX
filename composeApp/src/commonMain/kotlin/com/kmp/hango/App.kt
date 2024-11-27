@@ -44,6 +44,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.toRoute
 import coil3.ImageLoader
 import coil3.annotation.ExperimentalCoilApi
 import coil3.compose.setSingletonImageLoaderFactory
@@ -66,9 +67,9 @@ fun App(
     currentActivity: Any? = null,
 ) {
     MaterialTheme {
-        printScreenTest(currentActivity)
+//        printScreenTest(currentActivity)
 
-//        HomeScreen()
+        HomeScreen()
     }
 }
 
@@ -182,7 +183,9 @@ fun HomeScreen(
 
 
     Scaffold(
-        modifier = modifier,
+        modifier = modifier
+            .fillMaxSize()
+            .windowInsetsPadding(WindowInsets.safeDrawing),
         bottomBar = {
             if (showBottomBar) {
                 HomeBottomBar(
@@ -202,8 +205,8 @@ fun HomeScreen(
         ) {
             NavHost(
                 navController = navController,
-//                startDestination = Routes.Init,
-                startDestination = Routes.Game("123"),
+                startDestination = Routes.Init,
+//                startDestination = Routes.Game("123"),
                 modifier = modifier,
                 enterTransition = { fadeIn(tween(200)) },
                 exitTransition = { fadeOut(tween(200)) },
@@ -223,14 +226,18 @@ fun HomeScreen(
                     ProfileScreen()
                 }
 
-                composable<Routes.CategoryDetail> {
+                composable<Routes.CategoryDetail> { backStackEntry ->
+                    val categoryId = backStackEntry.toRoute<Routes.CategoryDetail>().categoryId
+
                     CategoryDetailScreen(
+                        categoryId = categoryId,
                         onNavigateGame = { navController.navigate(Routes.Game(it)) }
                     )
                 }
 
-                composable<Routes.Game> {
-                    GameScreen()
+                composable<Routes.Game> { backStackEntry ->
+                    val categoryId = backStackEntry.toRoute<Routes.CategoryDetail>().categoryId
+                    GameScreen(categoryId = categoryId)
                 }
             }
         }

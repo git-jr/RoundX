@@ -10,20 +10,28 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.Button
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import com.kmp.hango.ui.game.GameViewModel
 
 @Composable
 fun CategoryDetailScreen(
     modifier: Modifier = Modifier,
+    categoryId: String,
     onNavigateGame: (String) -> Unit
 ) {
-    val viewModel = viewModel<CategoryDetailViewModel>()
+//    val viewModel = viewModel<CategoryDetailViewModel>()
+    val viewModel: CategoryDetailViewModel = viewModel { CategoryDetailViewModel() }
     val state by viewModel.uiState.collectAsState()
+
+    LaunchedEffect(Unit) {
+        viewModel.prepareScreen(categoryId)
+    }
 
     Column(
         modifier = modifier.fillMaxSize().padding(16.dp),
