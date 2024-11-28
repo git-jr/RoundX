@@ -38,16 +38,20 @@ import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil3.compose.AsyncImage
 import com.kmp.hango.extensions.toTime
+import com.kmp.hango.getPlatform
 
 @Composable
 fun GameScreen(
     modifier: Modifier = Modifier,
-    categoryId: String
+    categoryId: String,
+    onNavigateHome: () -> Unit = {},
+    onShareResult: () -> Unit = {}
 ) {
     val viewModel: GameViewModel = viewModel { GameViewModel() }
     LaunchedEffect(Unit) {
         viewModel.prepareScreen(categoryId)
     }
+
 
 //    val viewModel = viewModel<GameViewModel>()
     val state by viewModel.uiState.collectAsState()
@@ -134,7 +138,7 @@ fun GameScreen(
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
                     Button(
-                        onClick = { viewModel.answerQuestion(false) },
+                        onClick = { onNavigateHome() },
                         modifier = Modifier.width(150.dp),
                         shape = CircleShape,
                         border = BorderStroke(
@@ -156,7 +160,10 @@ fun GameScreen(
                     Spacer(modifier = Modifier.size(16.dp))
 
                     Button(
-                        onClick = { viewModel.answerQuestion(true) },
+                        onClick = {
+                            onShareResult()
+                            viewModel.shareResult()
+                        },
                         shape = CircleShape,
                         colors = ButtonDefaults.buttonColors(
                             backgroundColor = Color(0XFF68ffa8),

@@ -1,23 +1,18 @@
 package com.kmp.hango.ui.game
 
-import androidx.lifecycle.SavedStateHandle
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.navigation.toRoute
 import com.kmp.hango.extensions.toTime
 import com.kmp.hango.extensions.zeroRound
-import com.kmp.hango.navigation.Routes
+import com.kmp.hango.getPlatform
 import com.kmp.hango.respository.questionSamples
+import com.kmp.hango.takeScreenshot
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
-import kotlinx.coroutines.flow.asFlow
 import kotlinx.coroutines.flow.asStateFlow
-import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 
-class GameViewModel(
-//    savedStateHandle: SavedStateHandle
-) : ViewModel() {
+class GameViewModel : ViewModel() {
 
     private val _uiState = MutableStateFlow(GameUiState())
     var uiState = _uiState.asStateFlow()
@@ -89,6 +84,10 @@ class GameViewModel(
         }
 
         initTimer()
+    }
+
+    fun shareResult() {
+        takeScreenshot()
     }
 
 }

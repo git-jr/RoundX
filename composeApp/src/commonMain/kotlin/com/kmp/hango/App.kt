@@ -237,7 +237,10 @@ fun HomeScreen(
 
                 composable<Routes.Game> { backStackEntry ->
                     val categoryId = backStackEntry.toRoute<Routes.CategoryDetail>().categoryId
-                    GameScreen(categoryId = categoryId)
+                    GameScreen(
+                        categoryId = categoryId,
+                        onNavigateHome = { navController.navigate(Routes.Init) }
+                    )
                 }
             }
         }
