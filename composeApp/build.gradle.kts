@@ -37,6 +37,9 @@ kotlin {
 
             // Ktor
             implementation(libs.ktor.client.okhttp)
+
+            // Koin
+            implementation(libs.koin.android)
         }
         commonMain.dependencies {
             implementation(compose.runtime)
@@ -70,8 +73,9 @@ kotlin {
             // Kamel ( para carregar imagens de url abaixo do Android 8, precisa ser abaixo da versão 1.0.0 e consequentemente tem que ser com Ktor abaixo da versão 3.0.0, agora está na 2.3.11)
             implementation("media.kamel:kamel-image:0.9.3")
 
-            // Screen Capture
-            implementation("network.chaintech:compose-multiplatform-screen-capture:1.0.1")
+            // Koin
+            implementation(libs.koin.core)
+            implementation(libs.koin.compose)
         }
 
         iosMain.dependencies {

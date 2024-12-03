@@ -1,12 +1,3 @@
 <paths xmlns:android="http://schemas.android.com/apk/res/android">
-    <files-path
-        name="screen_shots"
-        path="share_images" />
-    <external-path
-        name="external_files"
-        path="." />
-
-    <cache-path
-        name="images"
-        path="images/" />
+    <cache-path name="shared_images" path="." />
 </paths>
