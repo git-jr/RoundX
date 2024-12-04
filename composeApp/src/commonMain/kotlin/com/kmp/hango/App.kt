@@ -11,8 +11,11 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
+import androidx.compose.foundation.layout.calculateEndPadding
+import androidx.compose.foundation.layout.calculateStartPadding
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.size
@@ -37,6 +40,7 @@ import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.layer.drawLayer
 import androidx.compose.ui.graphics.rememberGraphicsLayer
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
 import androidx.navigation.compose.NavHost
@@ -64,49 +68,63 @@ fun App() {
             val coroutineScope = rememberCoroutineScope()
             val graphicsLayer = rememberGraphicsLayer()
 
-            Box(
-                modifier = Modifier
-                    .drawWithContent {
-                        // call record to capture the content in the graphics layer
-                        graphicsLayer.record {
-                            // draw the contents of the composable into the graphics layer
-                            this@drawWithContent.drawContent()
-                        }
-                        // draw the graphics layer on the visible canvas
-                        drawLayer(graphicsLayer)
-                    }
-                    .clickable {
-                        coroutineScope.launch {
-                            val bitmap: ImageBitmap = graphicsLayer.toImageBitmap()
-                            screenshotManager.shareImage(bitmap)
-                        }
-                    }
-                    .background(Color.White)
-            ) {
-                // todo add your content you want to capture in the bitmap
+            Scaffold { innerPadding ->
+                val isIos = getPlatform().name.contains("iOS")
+                val negativePadding = innerPadding.calculateTopPadding() - if (isIos) 8.dp else 0.dp
+                val positivePadding = if (isIos) 56.dp else 28.dp
 
-                Spacer(modifier = Modifier.size(32.dp))
-
-                AsyncImage(
-                    "https://raw.githubusercontent.com/git-jr/sample-files/refs/heads/main/profile%20pics/profile_pic_emoji_1.png",
-                    contentDescription = "Imagem da pergunta",
-                    contentScale = ContentScale.Crop,
-                    modifier = Modifier
-                        .border(
-                            width = 4.dp,
-                            color = Color.White,
-                            shape = RoundedCornerShape(25.dp)
+                Box(
+                    Modifier
+                        .background(Color.Red)
+                        .fillMaxSize()
+                        .offset(y = negativePadding)
+                        .padding(
+                            top = positivePadding,
+                            bottom = innerPadding.calculateBottomPadding(),
+                            start = innerPadding.calculateStartPadding(LocalLayoutDirection.current),
+                            end = innerPadding.calculateEndPadding(LocalLayoutDirection.current),
                         )
-                        .size(150.dp)
-                        .clip(shape = RoundedCornerShape(25.dp)),
-                )
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .drawWithContent {
+                                // call record to capture the content in the graphics layer
+                                graphicsLayer.record {
+                                    // draw the contents of the composable into the graphics layer
+                                    this@drawWithContent.drawContent()
+                                }
+                                // draw the graphics layer on the visible canvas
+                                drawLayer(graphicsLayer)
+                            }
+                            .clickable {
+                                coroutineScope.launch {
+                                    val bitmap: ImageBitmap = graphicsLayer.toImageBitmap()
+                                    screenshotManager.shareImage(bitmap)
+                                }
+                            }
+                    ) {
+                        Spacer(modifier = Modifier.size(32.dp))
 
-                Spacer(modifier = Modifier.size(32.dp))
+                        AsyncImage(
+                            "https://raw.githubusercontent.com/git-jr/sample-files/refs/heads/main/profile%20pics/profile_pic_emoji_1.png",
+                            contentDescription = "Imagem da pergunta",
+                            contentScale = ContentScale.Crop,
+                            modifier = Modifier
+                                .border(
+                                    width = 4.dp,
+                                    color = Color.White,
+                                    shape = RoundedCornerShape(25.dp)
+                                )
+                                .size(150.dp)
+                                .clip(shape = RoundedCornerShape(25.dp)),
+                        )
 
+                        Spacer(modifier = Modifier.size(32.dp))
+
+                    }
+
+                }
             }
-
-
-//        printScreenTest(currentActivity)
 
 //        HomeScreen()
         }
