@@ -3,7 +3,6 @@ package com.kmp.hango.ui.game
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -25,40 +24,54 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.saveable.rememberSaveableStateHolder
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.layer.drawLayer
+import androidx.compose.ui.graphics.rememberGraphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import coil3.compose.AsyncImage
 import com.kmp.hango.extensions.toTime
-import com.kmp.hango.getPlatform
+import kotlinx.coroutines.launch
+import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
 fun GameScreen(
     modifier: Modifier = Modifier,
     categoryId: String,
     onNavigateHome: () -> Unit = {},
-    onShareResult: () -> Unit = {}
 ) {
-    val viewModel: GameViewModel = viewModel { GameViewModel() }
+    val viewModel: GameViewModel = koinViewModel ()
+    val state by viewModel.uiState.collectAsState()
+
     LaunchedEffect(Unit) {
         viewModel.prepareScreen(categoryId)
     }
 
+    val coroutineScope = rememberCoroutineScope()
+    val graphicsLayer = rememberGraphicsLayer()
 
-//    val viewModel = viewModel<GameViewModel>()
-    val state by viewModel.uiState.collectAsState()
 
     val bgColor = Color(0XFF19042D)
     Column(
         modifier = modifier
+            .drawWithContent {
+                // call record to capture the content in the graphics layer
+                graphicsLayer.record {
+                    // draw the contents of the composable into the graphics layer
+                    this@drawWithContent.drawContent()
+                }
+                // draw the graphics layer on the visible canvas
+                drawLayer(graphicsLayer)
+            }
             .background(bgColor)
             .fillMaxSize()
             .padding(16.dp),
@@ -161,8 +174,10 @@ fun GameScreen(
 
                     Button(
                         onClick = {
-                            onShareResult()
-                            viewModel.shareResult()
+                            coroutineScope.launch {
+                                val bitmap: ImageBitmap = graphicsLayer.toImageBitmap()
+                                viewModel.shareResult(bitmap)
+                            }
                         },
                         shape = CircleShape,
                         colors = ButtonDefaults.buttonColors(

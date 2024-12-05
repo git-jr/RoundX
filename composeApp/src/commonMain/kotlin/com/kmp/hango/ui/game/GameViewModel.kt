@@ -1,18 +1,20 @@
 package com.kmp.hango.ui.game
 
+import androidx.compose.ui.graphics.ImageBitmap
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.kmp.hango.ScreenshotManager
 import com.kmp.hango.extensions.toTime
 import com.kmp.hango.extensions.zeroRound
-import com.kmp.hango.getPlatform
 import com.kmp.hango.respository.questionSamples
-import com.kmp.hango.takeScreenshot
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-class GameViewModel : ViewModel() {
+class GameViewModel(
+    private val screenshotManager: ScreenshotManager
+) : ViewModel() {
 
     private val _uiState = MutableStateFlow(GameUiState())
     var uiState = _uiState.asStateFlow()
@@ -86,8 +88,8 @@ class GameViewModel : ViewModel() {
         initTimer()
     }
 
-    fun shareResult() {
-        takeScreenshot()
+    fun shareResult(bitmap: ImageBitmap) {
+        screenshotManager.shareImage(bitmap)
     }
 
 }

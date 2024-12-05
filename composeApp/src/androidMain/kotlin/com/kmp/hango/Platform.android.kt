@@ -23,59 +23,6 @@ class AndroidPlatform : Platform {
 
 actual fun getPlatform(): Platform = AndroidPlatform()
 
-
-actual fun takeScreenshot(context: Any?) {
-    val activity = context as Activity
-
-    // Captura a raiz da view
-    val rootView: View = activity.window.decorView.rootView
-    val bitmap = Bitmap.createBitmap(rootView.width, rootView.height, Bitmap.Config.ARGB_8888)
-    val canvas = Canvas(bitmap)
-    rootView.draw(canvas)
-
-    // Salva o bitmap em um arquivo temporário
-    val imageFile = saveBitmapToCache(bitmap, activity)
-
-    if (imageFile != null) {
-        // Apresenta a modal de compartilhamento com a imagem
-        shareImage(imageFile, activity)
-    } else {
-        println("Falha ao capturar o screenshot")
-    }
-}
-
-//actual fun shareImage(image: ImageBitmap) {
-//    shareImageImageBitmap(image)
-//}
-
-//private fun shareImageImageBitmap(image: ImageBitmap) {
-//    val androidContext = AppContext.get()
-//
-//    // Converte o ImageBitmap para Bitmap do Android
-//    val bitmap = image.asAndroidBitmap()
-//
-//    // Salva o Bitmap em um arquivo temporário
-//    val file = File(androidContext.cacheDir, "shared_image.png")
-//    val outputStream = FileOutputStream(file)
-//    bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream)
-//    outputStream.close()
-//
-//    // Cria um intent para compartilhar o arquivo
-//    val intent = Intent(Intent.ACTION_SEND).apply {
-//        type = "image/png"
-//        putExtra(Intent.EXTRA_STREAM, Uri.fromFile(file))
-//        addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
-//        addFlags(Intent.FLAG_ACTIVITY_NEW_TASK) // Necessário para contexts não-Activity
-//
-//    }
-//
-//    androidContext.startActivity(Intent.createChooser(intent, "Compartilhar imagem").apply {
-//        addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
-//    })
-//    // Abre o share sheet
-////    androidContext.startActivity(Intent.createChooser(intent, "Compartilhar imagem"))
-//}
-
 private fun saveBitmapToCache(bitmap: Bitmap, activity: Activity): File? {
     return try {
         val cachePath = File(activity.cacheDir, "images")

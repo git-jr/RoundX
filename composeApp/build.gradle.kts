@@ -76,6 +76,7 @@ kotlin {
             // Koin
             implementation(libs.koin.core)
             implementation(libs.koin.compose)
+            implementation(libs.koin.composeVM)
         }
 
         iosMain.dependencies {
