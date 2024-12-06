@@ -1,5 +1,7 @@
 package com.kmp.hango
 
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionLayout
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -63,14 +65,15 @@ import org.koin.compose.koinInject
 fun App() {
     MaterialTheme {
         KoinContext {
-
             Scaffold { innerPadding ->
                 val isIos = getPlatform().name.contains("iOS")
                 val negativePadding = innerPadding.calculateTopPadding() - if (isIos) 8.dp else 0.dp
                 val positivePadding = if (isIos) 56.dp else 28.dp
 
+                val bgColor = Color(0XFF19042D)
                 Box(
                     Modifier
+                        .background(bgColor)
                         .fillMaxSize()
                         .offset(y = negativePadding)
                         .padding(
@@ -135,7 +138,7 @@ fun Printavel(modifier: Modifier = Modifier) {
 }
 
 
-@OptIn(ExperimentalSerializationApi::class)
+@OptIn(ExperimentalSerializationApi::class, ExperimentalSharedTransitionApi::class)
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
@@ -156,9 +159,11 @@ fun HomeScreen(
     }
 
 
+    val bgColor = Color(0XFF19042D)
     Scaffold(
         modifier = modifier
             .fillMaxSize()
+            .background(bgColor)
             .windowInsetsPadding(WindowInsets.safeDrawing),
         bottomBar = {
             if (showBottomBar) {
@@ -177,44 +182,49 @@ fun HomeScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
             verticalArrangement = Arrangement.Center
         ) {
-            NavHost(
-                navController = navController,
-                startDestination = Routes.Init,
-//                startDestination = Routes.Game("123"),
-                modifier = modifier,
-                enterTransition = { fadeIn(tween(200)) },
-                exitTransition = { fadeOut(tween(200)) },
-            ) {
-                composable<Routes.Init> {
-                    InitScreen(onNavigateCategoryDetail = {
-                        navController.navigate(Routes.CategoryDetail(it))
-                    })
-                }
-                composable<Routes.Search> {
-                    SearchScreen()
-                }
-                composable<Routes.Orders> {
-                    OrderScreen()
-                }
-                composable<Routes.Profile> {
-                    ProfileScreen()
-                }
+            SharedTransitionLayout {
+                NavHost(
+                    navController = navController,
+                    startDestination = Routes.Init,
+                    modifier = modifier,
+                ) {
+                    composable<Routes.Init> {
+                        InitScreen(
+                            onNavigateCategoryDetail = {
+                                navController.navigate(Routes.CategoryDetail(it))
+                            },
+                            sharedTransitionScope = this@SharedTransitionLayout,
+                            animatedContentScope = this@composable
+                        )
+                    }
+                    composable<Routes.Search> {
+                        SearchScreen()
+                    }
+                    composable<Routes.Orders> {
+                        OrderScreen()
+                    }
+                    composable<Routes.Profile> {
+                        ProfileScreen()
+                    }
 
-                composable<Routes.CategoryDetail> { backStackEntry ->
-                    val categoryId = backStackEntry.toRoute<Routes.CategoryDetail>().categoryId
+                    composable<Routes.CategoryDetail> { backStackEntry ->
+                        val categoryId = backStackEntry.toRoute<Routes.CategoryDetail>().categoryId
 
-                    CategoryDetailScreen(
-                        categoryId = categoryId,
-                        onNavigateGame = { navController.navigate(Routes.Game(it)) }
-                    )
-                }
+                        CategoryDetailScreen(
+                            categoryId = categoryId,
+                            onNavigateGame = { navController.navigate(Routes.Game(it)) },
+                            sharedTransitionScope = this@SharedTransitionLayout,
+                            animatedContentScope = this@composable
+                        )
+                    }
 
-                composable<Routes.Game> { backStackEntry ->
-                    val categoryId = backStackEntry.toRoute<Routes.CategoryDetail>().categoryId
-                    GameScreen(
-                        categoryId = categoryId,
-                        onNavigateHome = { navController.navigate(Routes.Init) }
-                    )
+                    composable<Routes.Game> { backStackEntry ->
+                        val categoryId = backStackEntry.toRoute<Routes.CategoryDetail>().categoryId
+                        GameScreen(
+                            categoryId = categoryId,
+                            onNavigateHome = { navController.navigate(Routes.Init) }
+                        )
+                    }
                 }
             }
         }

@@ -1,5 +1,8 @@
 package com.kmp.hango.ui
 
+import androidx.compose.animation.AnimatedContentScope
+import androidx.compose.animation.ExperimentalSharedTransitionApi
+import androidx.compose.animation.SharedTransitionScope
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -33,10 +36,13 @@ import com.kmp.hango.model.Category
 import com.kmp.hango.respository.categorySample
 
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun InitScreen(
     modifier: Modifier = Modifier,
-    onNavigateCategoryDetail: (String) -> Unit
+    onNavigateCategoryDetail: (String) -> Unit,
+    sharedTransitionScope: SharedTransitionScope,
+    animatedContentScope: AnimatedContentScope
 ) {
     Scaffold(
         topBar = {
@@ -68,28 +74,50 @@ fun InitScreen(
         },
         content = { paddingValues ->
             Column(
-                modifier = modifier
+                modifier = Modifier
                     .fillMaxSize()
                     .padding(paddingValues)
             ) {
-                CategoryList { onNavigateCategoryDetail(it) }
+                CategoryList(
+                    modifier = modifier.fillMaxSize(),
+                    onClick = onNavigateCategoryDetail,
+                    sharedTransitionScope = sharedTransitionScope,
+                    animatedContentScope = animatedContentScope
+                )
             }
         }
     )
 }
 
 
+@OptIn(ExperimentalSharedTransitionApi::class)
 @Composable
 fun CategoryList(
     modifier: Modifier = Modifier,
-    onClick: (String) -> Unit = {}
+    onClick: (String) -> Unit = {},
+    sharedTransitionScope: SharedTransitionScope,
+    animatedContentScope: AnimatedContentScope
 ) {
-    Column(
-        modifier = modifier.fillMaxSize()
-    ) {
-        LazyColumn {
-            items(categorySample) { category ->
-                CategoryItem(category = category) { onClick(category.id) }
+    val bgColor = Color(0XFF19042D)
+    with(sharedTransitionScope) {
+        Column(
+            modifier = modifier
+                .background(bgColor)
+                .fillMaxSize()
+        ) {
+            LazyColumn {
+                items(categorySample) { category ->
+                    CategoryItem(
+                        category = category,
+                        modifier = modifier
+                            .sharedElement(
+                                state = rememberSharedContentState(
+                                    key = "image-${category.id}"
+                                ),
+                                animatedVisibilityScope = animatedContentScope,
+                            ),
+                    ) { onClick(category.id) }
+                }
             }
         }
     }
