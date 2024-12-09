@@ -90,54 +90,6 @@ fun App() {
     }
 }
 
-@Composable
-fun Printavel(modifier: Modifier = Modifier) {
-    val screenshotManager = koinInject<ScreenshotManager>()
-
-    val coroutineScope = rememberCoroutineScope()
-    val graphicsLayer = rememberGraphicsLayer()
-
-
-    Box(
-        modifier = Modifier
-            .drawWithContent {
-                // call record to capture the content in the graphics layer
-                graphicsLayer.record {
-                    // draw the contents of the composable into the graphics layer
-                    this@drawWithContent.drawContent()
-                }
-                // draw the graphics layer on the visible canvas
-                drawLayer(graphicsLayer)
-            }
-            .clickable {
-                coroutineScope.launch {
-                    val bitmap: ImageBitmap = graphicsLayer.toImageBitmap()
-                    screenshotManager.shareImage(bitmap)
-                }
-            }
-    ) {
-        Spacer(modifier = Modifier.size(32.dp))
-
-        AsyncImage(
-            "https://raw.githubusercontent.com/git-jr/sample-files/refs/heads/main/profile%20pics/profile_pic_emoji_1.png",
-            contentDescription = "Imagem da pergunta",
-            contentScale = ContentScale.Crop,
-            modifier = Modifier
-                .border(
-                    width = 4.dp,
-                    color = Color.White,
-                    shape = RoundedCornerShape(25.dp)
-                )
-                .size(150.dp)
-                .clip(shape = RoundedCornerShape(25.dp)),
-        )
-
-        Spacer(modifier = Modifier.size(32.dp))
-
-    }
-}
-
-
 @OptIn(ExperimentalSerializationApi::class, ExperimentalSharedTransitionApi::class)
 @Composable
 fun HomeScreen(
