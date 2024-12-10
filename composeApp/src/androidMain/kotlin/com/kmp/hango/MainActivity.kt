@@ -15,9 +15,7 @@ class MainActivity : ComponentActivity() {
 
         hideSystemBars()
 
-        setContent {
-            App()
-        }
+        setContent { App() }
     }
 
     private fun hideSystemBars() {
