@@ -1,6 +1,9 @@
 package com.kmp.hango.ui.game
 
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Arrangement
@@ -24,13 +27,17 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ImageBitmap
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.layer.drawLayer
 import androidx.compose.ui.graphics.rememberGraphicsLayer
 import androidx.compose.ui.layout.ContentScale
@@ -40,7 +47,11 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import com.kmp.hango.extensions.toTime
+import hango.composeapp.generated.resources.Res
+import hango.composeapp.generated.resources.ic_o
+import hango.composeapp.generated.resources.ic_x
 import kotlinx.coroutines.launch
+import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -49,7 +60,7 @@ fun GameScreen(
     categoryId: String,
     onNavigateHome: () -> Unit = {},
 ) {
-    val viewModel: GameViewModel = koinViewModel ()
+    val viewModel: GameViewModel = koinViewModel()
     val state by viewModel.uiState.collectAsState()
 
     LaunchedEffect(Unit) {
@@ -60,7 +71,7 @@ fun GameScreen(
     val graphicsLayer = rememberGraphicsLayer()
 
 
-    val bgColor = Color(0XFF19042D)
+    val bgColor = Color(0XFF034d58)
     Column(
         modifier = modifier
             .drawWithContent {
@@ -293,8 +304,54 @@ private fun GameInProgress(
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically
         ) {
+
+            var rotationStateTrue by remember { mutableStateOf(0f) }
+            val rotationTrue by animateFloatAsState(
+                targetValue = rotationStateTrue,
+                animationSpec = tween(durationMillis = 500)
+            )
+
+            var rotationStateFalse by remember { mutableStateOf(0f) }
+            val rotationFalse by animateFloatAsState(
+                targetValue = rotationStateFalse,
+                animationSpec = tween(durationMillis = 500)
+            )
+
+
             Button(
-                onClick = { viewModel.answerQuestion(false) },
+                onClick = {
+                    viewModel.answerQuestion(true)
+                    rotationStateTrue += 180f
+                },
+                modifier = Modifier.size(150.dp),
+                shape = RoundedCornerShape(25.dp),
+                colors = ButtonDefaults.buttonColors(
+                    backgroundColor = Color(0XFF678bfc),
+                    contentColor = Color(0XFF1f5b39)
+                ),
+                border = BorderStroke(
+                    color = Color(0XFF0a2579),
+                    width = 6.dp
+                ),
+                elevation = ButtonDefaults.elevation(defaultElevation = 0.dp)
+            ) {
+                Image(
+                    painterResource(Res.drawable.ic_o),
+                    contentDescription = "True",
+                    modifier = Modifier
+                        .clip(shape = CircleShape)
+                        .size(150.dp)
+                        .graphicsLayer(rotationY = rotationTrue),
+                )
+            }
+
+            Spacer(modifier = Modifier.size(16.dp))
+
+            Button(
+                onClick = {
+                    viewModel.answerQuestion(false)
+                    rotationStateFalse += 180f
+                },
                 modifier = Modifier.size(150.dp),
                 shape = RoundedCornerShape(25.dp),
                 border = BorderStroke(
@@ -307,30 +364,15 @@ private fun GameInProgress(
                 ),
                 elevation = ButtonDefaults.elevation(defaultElevation = 0.dp)
             ) {
-                Text("X", fontSize = 24.sp)
+                Image(
+                    painterResource(Res.drawable.ic_x),
+                    contentDescription = "False",
+                    modifier = Modifier
+                        .clip(shape = CircleShape)
+                        .size(150.dp)
+                        .graphicsLayer(rotationZ = rotationFalse),
+                )
             }
-
-            Spacer(modifier = Modifier.size(16.dp))
-
-            Button(
-                onClick = {
-                    viewModel.answerQuestion(true)
-                },
-                modifier = Modifier.size(150.dp),
-                shape = RoundedCornerShape(25.dp),
-                colors = ButtonDefaults.buttonColors(
-                    backgroundColor = Color(0XFF68ffa8),
-                    contentColor = Color(0XFF1f5b39)
-                ),
-                border = BorderStroke(
-                    color = Color(0XFF1f5b39),
-                    width = 6.dp
-                ),
-                elevation = ButtonDefaults.elevation(defaultElevation = 0.dp)
-            ) {
-                Text("O", fontSize = 24.sp)
-            }
-
         }
     }
 }

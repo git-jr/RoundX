@@ -39,7 +39,7 @@ import org.jetbrains.compose.resources.painterResource
 @Composable
 fun InitScreen(
     modifier: Modifier = Modifier,
-    onNavigateCategoryDetail: (String) -> Unit,
+    onNavigateCategoryDetail: (String, Long) -> Unit,
     sharedTransitionScope: SharedTransitionScope,
     animatedContentScope: AnimatedContentScope
 ) {
@@ -79,7 +79,9 @@ fun InitScreen(
             ) {
                 CategoryList(
                     modifier = modifier.fillMaxSize(),
-                    onClick = onNavigateCategoryDetail,
+                    onClick = { id, color ->
+                        onNavigateCategoryDetail(id, color)
+                    },
                     sharedTransitionScope = sharedTransitionScope,
                     animatedContentScope = animatedContentScope
                 )
@@ -93,14 +95,14 @@ fun InitScreen(
 @Composable
 fun CategoryList(
     modifier: Modifier = Modifier,
-    onClick: (String) -> Unit = {},
+    onClick: (String, Long) -> Unit = { _, _ -> },
     sharedTransitionScope: SharedTransitionScope,
     animatedContentScope: AnimatedContentScope
 ) {
 
     Column(
         modifier = modifier
-
+            .background(Color(0XFF034d58))
             .fillMaxSize()
     ) {
         LazyColumn {
@@ -110,7 +112,12 @@ fun CategoryList(
                     modifier = modifier,
                     sharedTransitionScope = sharedTransitionScope,
                     animatedContentScope = animatedContentScope
-                ) { onClick(category.id) }
+                ) {
+                    onClick(
+                        category.id,
+                        category.color
+                    )
+                }
             }
         }
     }

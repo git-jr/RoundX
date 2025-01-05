@@ -70,7 +70,8 @@ fun App() {
                 val negativePadding = innerPadding.calculateTopPadding() - if (isIos) 8.dp else 0.dp
                 val positivePadding = if (isIos) 56.dp else 28.dp
 
-                val bgColor = Color(0XFF19042D)
+                var bgColor by remember { mutableStateOf(Color(0XFF034d58)) }
+
                 Box(
                     Modifier
                         .background(bgColor)
@@ -83,7 +84,12 @@ fun App() {
                             end = innerPadding.calculateEndPadding(LocalLayoutDirection.current),
                         )
                 ) {
-                    HomeScreen()
+                    HomeScreen(
+                        onChangeColor = { color ->
+                            bgColor = Color(color)
+                            println("Nova cor: $color")
+                        }
+                    )
                 }
             }
         }
@@ -94,7 +100,8 @@ fun App() {
 @Composable
 fun HomeScreen(
     modifier: Modifier = Modifier,
-    navController: NavHostController = rememberNavController()
+    navController: NavHostController = rememberNavController(),
+    onChangeColor: (Long) -> Unit
 ) {
     var currentRouteIndex by remember { mutableStateOf(0) }
     val currentRoute by navController.currentBackStackEntryAsState()
@@ -110,12 +117,9 @@ fun HomeScreen(
         }
     }
 
-
-    val bgColor = Color(0XFF19042D)
     Scaffold(
         modifier = modifier
             .fillMaxSize()
-            .background(bgColor)
             .windowInsetsPadding(WindowInsets.safeDrawing),
         bottomBar = {
             if (showBottomBar) {
@@ -142,8 +146,13 @@ fun HomeScreen(
                 ) {
                     composable<Routes.Init> {
                         InitScreen(
-                            onNavigateCategoryDetail = {
-                                navController.navigate(Routes.CategoryDetail(it))
+                            onNavigateCategoryDetail = { categoryId, categoryColor ->
+                                navController.navigate(
+                                    Routes.CategoryDetail(
+                                        categoryId = categoryId,
+                                        categoryColor = categoryColor
+                                    )
+                                )
                             },
                             sharedTransitionScope = this@SharedTransitionLayout,
                             animatedContentScope = this@composable
@@ -161,6 +170,9 @@ fun HomeScreen(
 
                     composable<Routes.CategoryDetail> { backStackEntry ->
                         val categoryId = backStackEntry.toRoute<Routes.CategoryDetail>().categoryId
+                        val categoryColor =
+                            backStackEntry.toRoute<Routes.CategoryDetail>().categoryColor
+                        onChangeColor(categoryColor)
 
                         CategoryDetailScreen(
                             categoryId = categoryId,
@@ -172,6 +184,7 @@ fun HomeScreen(
 
                     composable<Routes.Game> { backStackEntry ->
                         val categoryId = backStackEntry.toRoute<Routes.CategoryDetail>().categoryId
+                        onChangeColor(0XFF034d58)
                         GameScreen(
                             categoryId = categoryId,
                             onNavigateHome = { navController.navigate(Routes.Init) }

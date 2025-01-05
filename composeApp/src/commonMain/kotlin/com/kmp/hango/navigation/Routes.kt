@@ -16,7 +16,10 @@ sealed class Routes {
     data object Profile : Routes()
 
     @Serializable
-    data class CategoryDetail(val categoryId: String) : Routes()
+    data class CategoryDetail(
+        val categoryId: String,
+        val categoryColor: Long = 0XFF034d58
+    ) : Routes()
 
     @Serializable
     data class Game(val categoryId: String) : Routes()
