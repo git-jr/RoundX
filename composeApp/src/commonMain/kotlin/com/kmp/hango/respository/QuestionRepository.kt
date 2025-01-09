@@ -185,6 +185,42 @@ val questionSamples =
             content = "A eletricidade é uma forma de energia mecânica?",
             image = "",
             correct = false
+        ),
+        // Categoria: HISTÓRIA (id = "128")
+        Question(
+            id = "26",
+            categoryId = "128",
+            content = "A Primeira Guerra Mundial começou em 1914?",
+            image = "",
+            correct = true
+        ),
+        Question(
+            id = "27",
+            categoryId = "128",
+            content = "Júlio César foi um imperador romano?",
+            image = "",
+            correct = false
+        ),
+        Question(
+            id = "28",
+            categoryId = "128",
+            content = "A Revolução Francesa começou em 1789?",
+            image = "",
+            correct = true
+        ),
+        Question(
+            id = "29",
+            categoryId = "128",
+            content = "A Declaração de Independência dos Estados Unidos foi assinada em 1776?",
+            image = "",
+            correct = true
+        ),
+        Question(
+            id = "30",
+            categoryId = "128",
+            content = "Napoleão Bonaparte foi derrotado na Batalha de Waterloo?",
+            image = "",
+            correct = true
         )
     )
 

@@ -61,21 +61,6 @@ private fun shareImage(imageFile: File, activity: Context) {
     activity.startActivity(Intent.createChooser(shareIntent, "Compartilhar imagem via"))
 }
 
-private fun saveBitmapToGallery(bitmap: Bitmap) {
-    val filename = "screenshot_${System.currentTimeMillis()}.png"
-    val directory = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES)
-    val file = File(directory, filename)
-    try {
-        val outputStream = FileOutputStream(file)
-        bitmap.compress(Bitmap.CompressFormat.PNG, 100, outputStream)
-        outputStream.flush()
-        outputStream.close()
-        // Notifica a galeria sobre a nova imagem
-        // Você pode precisar adicionar código para atualizar a galeria
-    } catch (e: IOException) {
-        e.printStackTrace()
-    }
-}
 
 actual class ScreenshotManager(
     private val context: Context

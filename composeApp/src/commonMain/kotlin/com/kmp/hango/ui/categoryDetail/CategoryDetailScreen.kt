@@ -3,6 +3,7 @@ package com.kmp.hango.ui.categoryDetail
 import androidx.compose.animation.AnimatedContentScope
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionScope
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -13,7 +14,10 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
+import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.Icon
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -22,13 +26,18 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.graphics.colorspace.ColorSpace
 import androidx.compose.ui.graphics.colorspace.ColorSpaces
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
+import hango.composeapp.generated.resources.Res
+import hango.composeapp.generated.resources.ic_x
 import org.jetbrains.compose.resources.painterResource
 
 
@@ -46,6 +55,14 @@ fun CategoryDetailScreen(
 
     LaunchedEffect(Unit) {
         viewModel.prepareScreen(categoryId)
+    }
+
+    LaunchedEffect(state.goToGame) {
+        if (state.goToGame) {
+            state.category?.let { category ->
+                onNavigateGame(category.id)
+            }
+        }
     }
 
     with(sharedTransitionScope) {
@@ -94,16 +111,29 @@ fun CategoryDetailScreen(
                     Text(it.description)
                 }
 
-                // botão jogar
+
                 Button(
                     onClick = {
-                        state.category?.let {
-                            onNavigateGame(it.id)
-                        }
+                        viewModel.startGame()
                     },
-                    modifier = Modifier.fillMaxWidth().height(56.dp),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(8.dp)
+                        .height(80.dp),
+                    shape = RoundedCornerShape(15.dp),
+                    border = BorderStroke(
+                        color = Color(0XFF8c1c3a),
+                        width = 6.dp
+                    ),
+                    colors = ButtonDefaults.buttonColors(
+                        backgroundColor = Color(0XFFff235e),
+                    ),
                 ) {
-                    Text("Jogar")
+                    Text(
+                        text = state.textButton,
+                        color = Color.White,
+                        fontSize = 24.sp
+                    )
                 }
             }
         }

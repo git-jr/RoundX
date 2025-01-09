@@ -1,10 +1,13 @@
 package com.kmp.hango
 
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionLayout
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
@@ -52,6 +55,8 @@ import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
 import coil3.compose.AsyncImage
 import com.kmp.hango.components.HomeBottomBar
+import com.kmp.hango.constant.DEFAULT_BG_COLOR
+import com.kmp.hango.constant.DEFAULT_BG_COLOR_DARK
 import com.kmp.hango.navigation.Routes
 import com.kmp.hango.ui.InitScreen
 import com.kmp.hango.ui.categoryDetail.CategoryDetailScreen
@@ -70,7 +75,7 @@ fun App() {
                 val negativePadding = innerPadding.calculateTopPadding() - if (isIos) 8.dp else 0.dp
                 val positivePadding = if (isIos) 56.dp else 28.dp
 
-                var bgColor by remember { mutableStateOf(Color(0XFF034d58)) }
+                var bgColor by remember { mutableStateOf(Color(DEFAULT_BG_COLOR_DARK)) }
 
                 Box(
                     Modifier
@@ -112,8 +117,9 @@ fun HomeScreen(
     LaunchedEffect(currentRouteName) {
         currentRouteName?.let {
             val gameRoute = Routes.Game.serializer().descriptor.serialName
+            val detailRoute = Routes.CategoryDetail.serializer().descriptor.serialName
             val route = it.substringBefore("/")
-            showBottomBar = route != gameRoute
+            showBottomBar = route != gameRoute && route != detailRoute
         }
     }
 
@@ -145,6 +151,7 @@ fun HomeScreen(
                     modifier = modifier,
                 ) {
                     composable<Routes.Init> {
+                        onChangeColor(DEFAULT_BG_COLOR_DARK)
                         InitScreen(
                             onNavigateCategoryDetail = { categoryId, categoryColor ->
                                 navController.navigate(
