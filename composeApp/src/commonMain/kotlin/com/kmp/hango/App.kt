@@ -1,20 +1,11 @@
 package com.kmp.hango
 
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionLayout
-import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.slideInVertically
-import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.calculateEndPadding
 import androidx.compose.foundation.layout.calculateStartPadding
@@ -23,9 +14,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.windowInsetsPadding
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
@@ -34,17 +23,10 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.ImageBitmap
-import androidx.compose.ui.graphics.layer.drawLayer
-import androidx.compose.ui.graphics.rememberGraphicsLayer
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavHostController
@@ -53,18 +35,15 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.toRoute
-import coil3.compose.AsyncImage
 import com.kmp.hango.components.HomeBottomBar
-import com.kmp.hango.constant.DEFAULT_BG_COLOR
 import com.kmp.hango.constant.DEFAULT_BG_COLOR_DARK
 import com.kmp.hango.navigation.Routes
 import com.kmp.hango.ui.InitScreen
 import com.kmp.hango.ui.categoryDetail.CategoryDetailScreen
 import com.kmp.hango.ui.game.GameScreen
-import kotlinx.coroutines.launch
+import com.kmp.hango.ui.login.LoginScreen
 import kotlinx.serialization.ExperimentalSerializationApi
 import org.koin.compose.KoinContext
-import org.koin.compose.koinInject
 
 @Composable
 fun App() {
@@ -118,8 +97,9 @@ fun HomeScreen(
         currentRouteName?.let {
             val gameRoute = Routes.Game.serializer().descriptor.serialName
             val detailRoute = Routes.CategoryDetail.serializer().descriptor.serialName
+            val loginRoute = Routes.Login.serializer().descriptor.serialName
             val route = it.substringBefore("/")
-            showBottomBar = route != gameRoute && route != detailRoute
+            showBottomBar = route !in listOf(gameRoute, detailRoute, loginRoute)
         }
     }
 
@@ -147,9 +127,13 @@ fun HomeScreen(
             SharedTransitionLayout {
                 NavHost(
                     navController = navController,
-                    startDestination = Routes.Init,
+                    startDestination = Routes.Login,
                     modifier = modifier,
                 ) {
+                    composable<Routes.Login> {
+                        LoginScreen()
+                    }
+
                     composable<Routes.Init> {
                         onChangeColor(DEFAULT_BG_COLOR_DARK)
                         InitScreen(

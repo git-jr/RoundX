@@ -84,7 +84,7 @@ private fun AppBarInitScreen() {
     ) {
         Image(
             painterResource(Res.drawable.round_x_name),
-            contentDescription = "Profile",
+            contentDescription = "Logo round x name",
         )
     }
 }
