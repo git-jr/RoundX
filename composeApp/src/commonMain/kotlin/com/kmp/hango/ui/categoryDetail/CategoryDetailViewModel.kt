@@ -14,10 +14,10 @@ class CategoryDetailViewModel : ViewModel() {
     var uiState = _uiState.asStateFlow()
 
     private val listShapes = listOf(
-        "▲ ▲ ▲",
-        "■ ■ ■",
-        "● ● ●",
-        "✖ ✖ ✖"
+        "▲ ▲ 3 ▲ ▲",
+        "■ ■ 2 ■ ■",
+        "● ● 1 ● ●",
+        "✖ ✖ VAI ✖ ✖"
     )
 
     fun prepareScreen(categoryId: String) {
@@ -32,7 +32,8 @@ class CategoryDetailViewModel : ViewModel() {
                 _uiState.value = _uiState.value.copy(
                     textButton = it
                 )
-                delay(1000)
+//                delay(500)
+                delay(0)
             }
             _uiState.value = _uiState.value.copy(
                 goToGame = true

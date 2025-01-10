@@ -36,13 +36,13 @@ class GameViewModel(
         currentAnswers[currentQuestionIndex] = answer
         _uiState.value = uiState.value.copy(answers = currentAnswers)
 
-        if (uiState.value.currentQuestion?.correct == answer) {
-            _uiState.value = uiState.value.copy(score = uiState.value.score + 1)
-        }
-        foNextQuestion()
+        val isCorrect = uiState.value.currentQuestion?.correct == answer
+
+        _uiState.value = uiState.value.copy(correctAnswers = uiState.value.correctAnswers + isCorrect)
+        goNextQuestion()
     }
 
-    private fun foNextQuestion() {
+    private fun goNextQuestion() {
         with(uiState.value) {
             val currentQuestionIndex = currentQuestionIndex + 1
             if (currentQuestionIndex == questions.size) {
@@ -60,7 +60,7 @@ class GameViewModel(
 
     private fun endGame() {
         with(uiState.value) {
-            val score = answers.count { it == true }
+            val score = correctAnswers.count { it }
             val scoreFormatted = "${score.zeroRound()}/${questions.size.zeroRound()}"
             val timerFormatted = currentTime.toTime()
 

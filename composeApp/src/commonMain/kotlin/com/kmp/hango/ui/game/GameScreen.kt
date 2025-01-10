@@ -46,6 +46,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
+import com.kmp.hango.constant.DEFAULT_BG_COLOR
 import com.kmp.hango.extensions.toTime
 import hango.composeapp.generated.resources.Res
 import hango.composeapp.generated.resources.ic_o
@@ -71,7 +72,7 @@ fun GameScreen(
     val graphicsLayer = rememberGraphicsLayer()
 
 
-    val bgColor = Color(0XFF034d58)
+    val bgColor = Color(DEFAULT_BG_COLOR)
     Column(
         modifier = modifier
             .drawWithContent {
@@ -97,7 +98,7 @@ fun GameScreen(
                 val borderColor = Color(0XFFC57601)
                 val buttonBgColor = Color(0XFFFFEE00)
 
-                Spacer(modifier = Modifier.size(32.dp))
+                Spacer(modifier = Modifier.size(16.dp))
                 Text(
                     "Resultado",
                     color = Color.White,
@@ -123,6 +124,11 @@ fun GameScreen(
 
                 Spacer(modifier = Modifier.size(32.dp))
 
+                CorrectAnswer(
+                    Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
+                    state.correctAnswers,
+                )
+
                 Card(
                     modifier = Modifier
                         .padding(8.dp)
@@ -145,22 +151,14 @@ fun GameScreen(
                     }
                 }
 
-                Spacer(modifier = Modifier.size(40.dp))
-
-                Text(
-                    text = "Bora compartilhar e desafiar seus amigos?",
-                    color = Color.White,
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.Bold,
-                    textAlign = TextAlign.Center,
-                )
-
-                Spacer(modifier = Modifier.size(40.dp))
+                Spacer(modifier = Modifier.size(20.dp))
 
                 Column(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
+                    Spacer(modifier = Modifier.size(20.dp))
+
                     Button(
                         onClick = { onNavigateHome() },
                         modifier = Modifier.width(150.dp),
@@ -207,6 +205,15 @@ fun GameScreen(
                         )
                     }
 
+                    Spacer(modifier = Modifier.size(20.dp))
+
+                    Text(
+                        text = "Bora compartilhar e desafiar seus amigos?",
+                        color = Color.White,
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Bold,
+                        textAlign = TextAlign.Center,
+                    )
                 }
 
             }
@@ -230,49 +237,7 @@ private fun GameInProgress(
         verticalArrangement = Arrangement.SpaceBetween,
     ) {
         Column {
-            Row(
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically,
-                modifier = modifier
-                    .padding(64.dp, 32.dp)
-                    .clip(shape = RoundedCornerShape(25.dp))
-                    .border(
-                        width = 4.dp,
-                        color = Color.White,
-                        shape = RoundedCornerShape(25.dp)
-                    )
-            ) {
-                Row(
-                    modifier
-                        .weight(0.5f)
-                        .padding(8.dp),
-                    horizontalArrangement = Arrangement.Center,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        state.currentCount,
-                        color = Color.White,
-                        fontSize = 24.sp,
-                        fontWeight = FontWeight.Bold,
-                    )
-                }
-
-                Row(
-                    modifier
-                        .weight(0.5f)
-                        .background(Color.White)
-                        .padding(8.dp),
-                    horizontalArrangement = Arrangement.Center,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Text(
-                        state.currentTime.toTime(),
-                        color = bgColor,
-                        fontSize = 24.sp,
-                        fontWeight = FontWeight.Bold,
-                    )
-                }
-            }
+            GameStatus(state)
 
             AsyncImage(
                 "https://raw.githubusercontent.com/git-jr/sample-files/refs/heads/main/profile%20pics/profile_pic_emoji_1.png",
@@ -299,80 +264,172 @@ private fun GameInProgress(
             )
         }
 
+        ButtonsTrueFalse(viewModel)
+    }
+}
+
+@Composable
+private fun GameStatus(
+    state: GameUiState
+) {
+    Column(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
         Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
+            horizontalArrangement = Arrangement.Center,
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier
+                .padding(start = 64.dp, end = 64.dp, top = 16.dp, bottom = 16.dp)
+                .clip(shape = RoundedCornerShape(25.dp))
+                .border(
+                    width = 4.dp,
+                    color = Color.White,
+                    shape = RoundedCornerShape(25.dp)
+                )
         ) {
-
-            var rotationStateTrue by remember { mutableStateOf(0f) }
-            val rotationTrue by animateFloatAsState(
-                targetValue = rotationStateTrue,
-                animationSpec = tween(durationMillis = 500)
-            )
-
-            var rotationStateFalse by remember { mutableStateOf(0f) }
-            val rotationFalse by animateFloatAsState(
-                targetValue = rotationStateFalse,
-                animationSpec = tween(durationMillis = 500)
-            )
-
-
-            Button(
-                onClick = {
-                    viewModel.answerQuestion(true)
-                    rotationStateTrue += 180f
-                },
-                modifier = Modifier.size(150.dp),
-                shape = RoundedCornerShape(25.dp),
-                colors = ButtonDefaults.buttonColors(
-                    backgroundColor = Color(0XFF678bfc),
-                    contentColor = Color(0XFF1f5b39)
-                ),
-                border = BorderStroke(
-                    color = Color(0XFF0a2579),
-                    width = 6.dp
-                ),
-                elevation = ButtonDefaults.elevation(defaultElevation = 0.dp)
+            Row(
+                Modifier
+                    .weight(0.5f)
+                    .padding(8.dp),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Image(
-                    painterResource(Res.drawable.ic_o),
-                    contentDescription = "True",
-                    modifier = Modifier
-                        .clip(shape = CircleShape)
-                        .size(150.dp)
-                        .graphicsLayer(rotationY = rotationTrue),
+                Text(
+                    state.currentCount,
+                    color = Color.White,
+                    fontSize = 24.sp,
+                    fontWeight = FontWeight.Bold,
                 )
             }
 
-            Spacer(modifier = Modifier.size(16.dp))
-
-            Button(
-                onClick = {
-                    viewModel.answerQuestion(false)
-                    rotationStateFalse += 180f
-                },
-                modifier = Modifier.size(150.dp),
-                shape = RoundedCornerShape(25.dp),
-                border = BorderStroke(
-                    color = Color(0XFF8c1c3a),
-                    width = 6.dp
-                ),
-                colors = ButtonDefaults.buttonColors(
-                    backgroundColor = Color(0XFFff235e),
-                    contentColor = Color(0XFF8c1c3a)
-                ),
-                elevation = ButtonDefaults.elevation(defaultElevation = 0.dp)
+            Row(
+                Modifier
+                    .weight(0.5f)
+                    .background(Color.White)
+                    .padding(8.dp),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
             ) {
-                Image(
-                    painterResource(Res.drawable.ic_x),
-                    contentDescription = "False",
-                    modifier = Modifier
-                        .clip(shape = CircleShape)
-                        .size(150.dp)
-                        .graphicsLayer(rotationZ = rotationFalse),
+                Text(
+                    state.currentTime.toTime(),
+                    color = Color(DEFAULT_BG_COLOR),
+                    fontSize = 24.sp,
+                    fontWeight = FontWeight.Bold,
                 )
             }
+        }
+
+        CorrectAnswer(
+            Modifier.padding(start = 16.dp, end = 16.dp, bottom = 16.dp),
+            state.correctAnswers
+        )
+    }
+}
+
+@Composable
+private fun CorrectAnswer(
+    modifier: Modifier = Modifier,
+    answers: List<Boolean?> = emptyList()
+) {
+    Row(
+        horizontalArrangement = Arrangement.Center,
+        verticalAlignment = Alignment.CenterVertically,
+        modifier = modifier
+            .fillMaxWidth()
+            .height(30.dp)
+    ) {
+        answers.filterNotNull().forEach { right ->
+            val imageRes = if (right) Res.drawable.ic_o else Res.drawable.ic_x
+            val contentDescription = if (right) "True" else "False"
+            Image(
+                painterResource(imageRes),
+                contentDescription = contentDescription,
+                modifier = Modifier
+                    .clip(shape = CircleShape)
+                    .size(20.dp)
+            )
+            Spacer(modifier = Modifier.size(8.dp))
+        }
+    }
+}
+
+@Composable
+private fun ButtonsTrueFalse(viewModel: GameViewModel) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+
+        var rotationStateTrue by remember { mutableStateOf(0f) }
+        val rotationTrue by animateFloatAsState(
+            targetValue = rotationStateTrue,
+            animationSpec = tween(durationMillis = 500)
+        )
+
+        var rotationStateFalse by remember { mutableStateOf(0f) }
+        val rotationFalse by animateFloatAsState(
+            targetValue = rotationStateFalse,
+            animationSpec = tween(durationMillis = 500)
+        )
+
+
+        Button(
+            onClick = {
+                viewModel.answerQuestion(true)
+                rotationStateTrue += 180f
+            },
+            modifier = Modifier.size(150.dp),
+            shape = RoundedCornerShape(25.dp),
+            colors = ButtonDefaults.buttonColors(
+                backgroundColor = Color(0XFF678bfc),
+                contentColor = Color(0XFF1f5b39)
+            ),
+            border = BorderStroke(
+                color = Color(0XFF0a2579),
+                width = 6.dp
+            ),
+            elevation = ButtonDefaults.elevation(defaultElevation = 0.dp)
+        ) {
+            Image(
+                painterResource(Res.drawable.ic_o),
+                contentDescription = "True",
+                modifier = Modifier
+                    .clip(shape = CircleShape)
+                    .size(150.dp)
+                    .graphicsLayer(rotationY = rotationTrue),
+            )
+        }
+
+        Spacer(modifier = Modifier.size(16.dp))
+
+        Button(
+            onClick = {
+                viewModel.answerQuestion(false)
+                rotationStateFalse += 180f
+            },
+            modifier = Modifier.size(150.dp),
+            shape = RoundedCornerShape(25.dp),
+            border = BorderStroke(
+                color = Color(0XFF8c1c3a),
+                width = 6.dp
+            ),
+            colors = ButtonDefaults.buttonColors(
+                backgroundColor = Color(0XFFff235e),
+                contentColor = Color(0XFF8c1c3a)
+            ),
+            elevation = ButtonDefaults.elevation(defaultElevation = 0.dp)
+        ) {
+            Image(
+                painterResource(Res.drawable.ic_x),
+                contentDescription = "False",
+                modifier = Modifier
+                    .clip(shape = CircleShape)
+                    .size(150.dp)
+                    .graphicsLayer(rotationZ = rotationFalse),
+            )
         }
     }
 }
