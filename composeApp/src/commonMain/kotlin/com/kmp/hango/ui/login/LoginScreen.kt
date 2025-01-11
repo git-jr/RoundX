@@ -21,6 +21,7 @@ import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -45,8 +46,20 @@ fun LoginScreen(
     val viewModel: LoginViewModel = koinViewModel()
     val state by viewModel.uiState.collectAsState()
 
+    LaunchedEffect(state.goToInit) {
+        if (state.goToInit) {
+            onNavigateInit()
+        }
+    }
+
+    LaunchedEffect(state.goToRegister) {
+        if (state.goToRegister) {
+            onNavigateRegister()
+        }
+    }
+
     Column(
-        modifier = Modifier
+        modifier = modifier
             .background(Color(DEFAULT_BG_COLOR_DARK))
             .fillMaxSize()
             .padding(16.dp),
@@ -135,8 +148,8 @@ fun LoginScreen(
             elevation = ButtonDefaults.elevation(defaultElevation = 0.dp)
         ) {
             Text(
-                "Logar".uppercase(),
-                color = Color.White
+                "ENTRAR",
+                color = Color.White,
             )
         }
 

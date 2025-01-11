@@ -108,7 +108,7 @@ fun HomeScreen(
             .fillMaxSize()
             .windowInsetsPadding(WindowInsets.safeDrawing),
         bottomBar = {
-            if (showBottomBar) {
+            if (false) {
                 HomeBottomBar(
                     externalIndex = currentRouteIndex,
                     onItemSelected = { item, index ->
@@ -131,7 +131,10 @@ fun HomeScreen(
                     modifier = modifier,
                 ) {
                     composable<Routes.Login> {
-                        LoginScreen()
+                        LoginScreen(
+                            onNavigateInit = { navController.navigate(Routes.Init) },
+                            onNavigateRegister = { navController.navigate(Routes.Register) }
+                        )
                     }
 
                     composable<Routes.Init> {

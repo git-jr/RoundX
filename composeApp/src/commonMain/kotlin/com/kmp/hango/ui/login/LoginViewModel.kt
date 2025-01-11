@@ -9,11 +9,21 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-class LoginViewModel() : ViewModel() {
+class LoginViewModel : ViewModel() {
 
     private val _uiState = MutableStateFlow(LoginUiState())
     var uiState = _uiState.asStateFlow()
-    val firebaseAuth: FirebaseAuth = Firebase.auth
+    private val firebaseAuth: FirebaseAuth = Firebase.auth
+
+    init {
+        checkUserLogged()
+    }
+
+    private fun checkUserLogged() {
+        if (firebaseAuth.currentUser != null) {
+            _uiState.value = uiState.value.copy(goToInit = true)
+        }
+    }
 
     fun updateUsername(value: String) {
         _uiState.value = uiState.value.copy(userName = value)
@@ -29,18 +39,21 @@ class LoginViewModel() : ViewModel() {
 
 
         viewModelScope.launch {
-           try {
+            try {
                 val authResult = firebaseAuth.signInWithEmailAndPassword(
-                     username,
-                     password
+                    username,
+                    password
                 )
 
                 if (authResult.user != null) {
-                     _uiState.value = uiState.value.copy(loginError = false)
+                    _uiState.value = uiState.value.copy(
+                        goToInit = true,
+                        loginError = false,
+                    )
                 }
-              } catch (e: Exception) {
+            } catch (e: Exception) {
                 _uiState.value = uiState.value.copy(loginError = true)
-           }
+            }
         }
     }
 }
