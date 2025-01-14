@@ -169,6 +169,19 @@ fun LoginScreen(
                 .align(Alignment.CenterHorizontally)
         )
 
+        Spacer(modifier = Modifier.height(8.dp))
+
+        Text(
+            text = "Entrar como convidado",
+            color = Color.White,
+            textAlign = TextAlign.Center,
+            modifier = Modifier
+                .size(300.dp, 56.dp)
+                .clip(CircleShape)
+                .clickable { onNavigateInit() }
+                .padding(16.dp)
+                .align(Alignment.CenterHorizontally)
+        )
     }
 
 }
