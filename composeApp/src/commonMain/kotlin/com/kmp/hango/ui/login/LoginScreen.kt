@@ -30,6 +30,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.PasswordVisualTransformation
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.kmp.hango.constant.DEFAULT_BG_COLOR_DARK
 import hango.composeapp.generated.resources.Res
@@ -159,7 +160,9 @@ fun LoginScreen(
         Text(
             text = "Cadastrar",
             color = Color.White,
+            textAlign = TextAlign.Center,
             modifier = Modifier
+                .size(300.dp, 56.dp)
                 .clip(CircleShape)
                 .clickable { onNavigateRegister() }
                 .padding(16.dp)

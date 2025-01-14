@@ -18,9 +18,12 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.Icon
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
 import androidx.compose.material.TextFieldDefaults
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Person
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
@@ -85,21 +88,30 @@ fun RegisterScreen(
                 .background(Color.White)
                 .clickable {
                     viewModel.selectImage()
-                }
+                },
+            contentAlignment = Alignment.Center
         ) {
-            AsyncImage(
-                state.imageByteArray,
-                contentDescription = "Logo round x name",
-                modifier = Modifier.size(200.dp),
-                contentScale = ContentScale.Crop
-            )
+            state.imageByteArray?.let {
+                AsyncImage(
+                    state.imageByteArray,
+                    contentDescription = "Logo round x name",
+                    modifier = Modifier.size(200.dp),
+                    contentScale = ContentScale.Crop
+                )
+            } ?: run {
+                Icon(
+                    Icons.Default.Person,
+                    contentDescription = "Icone de usuário",
+                    tint = Color(0XFF8c1c3a)
+                )
+            }
         }
 
         Spacer(modifier = Modifier.height(16.dp))
 
         if (state.loginError) {
             Text(
-                text = "Login ou senha incorretos",
+                text = "Erro ao cadastrar",
                 color = Color.Yellow,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier
@@ -110,8 +122,8 @@ fun RegisterScreen(
         }
 
         OutlinedTextField(
-            value = state.userName,
-            onValueChange = { viewModel.updateUsername(it) },
+            value = state.email,
+            onValueChange = { viewModel.updateEmail(it) },
             label = { Text("Nome de Usuário") },
             modifier = Modifier.fillMaxWidth(),
             colors = TextFieldDefaults.outlinedTextFieldColors(
@@ -131,6 +143,25 @@ fun RegisterScreen(
             value = state.password,
             onValueChange = { viewModel.updatePassword(it) },
             label = { Text("Senha") },
+            modifier = Modifier.fillMaxWidth(),
+            visualTransformation = PasswordVisualTransformation(),
+            colors = TextFieldDefaults.outlinedTextFieldColors(
+                focusedBorderColor = Color.White,
+                unfocusedBorderColor = Color.White,
+                cursorColor = Color.White,
+                textColor = Color.White,
+                placeholderColor = Color.White,
+                unfocusedLabelColor = Color.White,
+                focusedLabelColor = Color.White
+            )
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        OutlinedTextField(
+            value = state.confirmPassword,
+            onValueChange = { viewModel.updateConfirmPassword(it) },
+            label = { Text("Confirmar Senha") },
             modifier = Modifier.fillMaxWidth(),
             visualTransformation = PasswordVisualTransformation(),
             colors = TextFieldDefaults.outlinedTextFieldColors(

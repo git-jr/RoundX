@@ -21,16 +21,20 @@ class RegisterViewModel : ViewModel() {
     private val firebaseAuth: FirebaseAuth = Firebase.auth
     private val firebaseStorage = Firebase.storage
 
-    fun updateUsername(value: String) {
-        _uiState.value = uiState.value.copy(userName = value)
+    fun updateEmail(value: String) {
+        _uiState.value = uiState.value.copy(email = value)
     }
 
     fun updatePassword(value: String) {
         _uiState.value = uiState.value.copy(password = value)
     }
 
+    fun updateConfirmPassword(value: String) {
+        _uiState.value = uiState.value.copy(confirmPassword = value)
+    }
+
     fun login() {
-        val username = uiState.value.userName
+        val username = uiState.value.email
         val password = uiState.value.password
 
 
@@ -61,7 +65,6 @@ class RegisterViewModel : ViewModel() {
                 title = "Selecione a imagem de perfil",
             ).let { image ->
                 _uiState.value = uiState.value.copy(
-                    imageProfile = image,
                     imageByteArray = image?.readBytes()
                 )
             }
@@ -69,7 +72,41 @@ class RegisterViewModel : ViewModel() {
     }
 
     fun register() {
-        sendImage()
+        val username = uiState.value.email
+        val password = uiState.value.password
+        val confirmPassword = uiState.value.confirmPassword
+
+        if (username.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
+            println("register error 1:")
+            _uiState.value = uiState.value.copy(loginError = true)
+            return
+        }
+
+        if (password != confirmPassword) {
+            println("register error 3:")
+            _uiState.value = uiState.value.copy(loginError = true)
+            return
+        }
+
+        viewModelScope.launch {
+            try {
+                val authResult = firebaseAuth.createUserWithEmailAndPassword(
+                    username,
+                    password
+                )
+
+                if (authResult.user != null) {
+                    println("register error 4:")
+                    _uiState.value = uiState.value.copy(
+                        goToInit = true,
+                        loginError = false,
+                    )
+                }
+            } catch (e: Exception) {
+                println("register error 5: $e")
+                _uiState.value = uiState.value.copy(loginError = true)
+            }
+        }
     }
 
     fun sendImage() {
