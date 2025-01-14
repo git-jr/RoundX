@@ -2,6 +2,7 @@ package com.kmp.hango
 
 import com.kmp.hango.ui.game.GameViewModel
 import com.kmp.hango.ui.login.LoginViewModel
+import com.kmp.hango.ui.register.RegisterViewModel
 import org.koin.core.KoinApplication
 import org.koin.core.context.startKoin
 import org.koin.core.module.Module
@@ -13,6 +14,7 @@ expect val targetModule: Module
 val appModule = module {
     viewModel { GameViewModel(get()) }
     viewModel { LoginViewModel() }
+    viewModel { RegisterViewModel() }
 }
 
 fun initializeKoin(

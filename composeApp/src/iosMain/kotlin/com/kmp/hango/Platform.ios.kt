@@ -2,11 +2,12 @@ package com.kmp.hango
 
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.toPixelMap
+import dev.gitlive.firebase.storage.File
+import io.github.vinceglb.filekit.core.PlatformFile
 import kotlinx.cinterop.ExperimentalForeignApi
 import platform.UIKit.UIDevice
 import platform.UIKit.*
 import platform.CoreGraphics.*
-import kotlinx.cinterop.*
 import platform.CoreGraphics.CGColorSpaceCreateDeviceRGB
 import platform.CoreGraphics.CGBitmapContextCreate
 import platform.UIKit.UIImage
@@ -89,4 +90,8 @@ actual class ScreenshotManager {
         // Apresenta a modal de compartilhamento com a imagem
         presentShareSheet(uiImage)
     }
+}
+
+actual fun PlatformFile.toFirebaseFile(): File {
+    return File(this.nsUrl)
 }

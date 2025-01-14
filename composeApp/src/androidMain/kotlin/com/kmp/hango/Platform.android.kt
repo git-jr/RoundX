@@ -15,7 +15,9 @@ import android.net.Uri
 import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asAndroidBitmap
 import androidx.core.content.FileProvider
+import io.github.vinceglb.filekit.core.PlatformFile
 
+import dev.gitlive.firebase.storage.File as FirebaseFile
 
 class AndroidPlatform : Platform {
     override val name: String = "Android ${Build.VERSION.SDK_INT}"
@@ -123,4 +125,8 @@ actual class ScreenshotManager(
         })
     }
 
+}
+
+actual fun PlatformFile.toFirebaseFile(): FirebaseFile {
+    return FirebaseFile(this.uri)
 }

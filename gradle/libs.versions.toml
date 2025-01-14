@@ -12,7 +12,7 @@ androidx-lifecycle = "2.8.3"
 androidx-material = "1.12.0"
 androidx-test-junit = "1.2.1"
 compose-multiplatform = "1.7.0"
-firebaseAuth = "2.1.0"
+filekitCompose = "0.8.8"
 junit = "4.13.2"
 kotlin = "2.0.21"
 kotlin-serialization = "2.0.20"
@@ -25,7 +25,11 @@ koin = "4.0.0"
 
 google-services = "4.4.2"
 
+firebaseAuth = "2.1.0"
+firebaseStorage = "2.1.0"
+
 [libraries]
+filekit-compose = { module = "io.github.vinceglb:filekit-compose", version.ref = "filekitCompose" }
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
 kotlin-test-junit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlin" }
 junit = { group = "junit", name = "junit", version.ref = "junit" }
@@ -60,6 +64,7 @@ koin-compose = { module = "io.insert-koin:koin-compose", version.ref = "koin" }
 koin-composeVM = { module = "io.insert-koin:koin-compose-viewmodel", version.ref = "koin" }
 
 firebase-auth = { module = "dev.gitlive:firebase-auth", version.ref = "firebaseAuth" }
+firebase-storage = { module = "dev.gitlive:firebase-storage", version.ref = "firebaseStorage" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

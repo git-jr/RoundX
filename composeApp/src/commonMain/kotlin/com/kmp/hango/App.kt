@@ -42,6 +42,7 @@ import com.kmp.hango.ui.InitScreen
 import com.kmp.hango.ui.categoryDetail.CategoryDetailScreen
 import com.kmp.hango.ui.game.GameScreen
 import com.kmp.hango.ui.login.LoginScreen
+import com.kmp.hango.ui.register.RegisterScreen
 import kotlinx.serialization.ExperimentalSerializationApi
 import org.koin.compose.KoinContext
 
@@ -130,10 +131,17 @@ fun HomeScreen(
                     startDestination = Routes.Login,
                     modifier = modifier,
                 ) {
+
                     composable<Routes.Login> {
                         LoginScreen(
                             onNavigateInit = { navController.navigate(Routes.Init) },
                             onNavigateRegister = { navController.navigate(Routes.Register) }
+                        )
+                    }
+
+                    composable<Routes.Register> {
+                        RegisterScreen(
+                            onNavigateInit = { navController.navigate(Routes.Init) }
                         )
                     }
 

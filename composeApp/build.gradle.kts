@@ -81,6 +81,10 @@ kotlin {
 
             // Firebase
             implementation(libs.firebase.auth)
+            implementation(libs.firebase.storage)
+
+            // Document and Image Selector
+            implementation(libs.filekit.compose)
         }
 
         iosMain.dependencies {
