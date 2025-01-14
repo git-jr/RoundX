@@ -2,6 +2,7 @@ package com.kmp.hango
 
 import androidx.compose.animation.ExperimentalSharedTransitionApi
 import androidx.compose.animation.SharedTransitionLayout
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -14,7 +15,12 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.windowInsetsPadding
+import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.AlertDialog
+import androidx.compose.material.Button
+import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Scaffold
 import androidx.compose.material.Text
@@ -42,6 +48,7 @@ import com.kmp.hango.ui.InitScreen
 import com.kmp.hango.ui.categoryDetail.CategoryDetailScreen
 import com.kmp.hango.ui.game.GameScreen
 import com.kmp.hango.ui.login.LoginScreen
+import com.kmp.hango.ui.profile.ProfileScreen
 import com.kmp.hango.ui.register.RegisterScreen
 import kotlinx.serialization.ExperimentalSerializationApi
 import org.koin.compose.KoinContext
@@ -109,7 +116,7 @@ fun HomeScreen(
             .fillMaxSize()
             .windowInsetsPadding(WindowInsets.safeDrawing),
         bottomBar = {
-            if (false) {
+            if (showBottomBar) {
                 HomeBottomBar(
                     externalIndex = currentRouteIndex,
                     onItemSelected = { item, index ->
@@ -167,7 +174,9 @@ fun HomeScreen(
                         OrderScreen()
                     }
                     composable<Routes.Profile> {
-                        ProfileScreen()
+                        ProfileScreen(onNavigateLogin = {
+                            navController.navigate(Routes.Login) { popUpTo(0) { inclusive = true } }
+                        })
                     }
 
                     composable<Routes.CategoryDetail> { backStackEntry ->
@@ -221,15 +230,5 @@ fun OrderScreen(modifier: Modifier = Modifier) {
     }
 }
 
-@Composable
-fun ProfileScreen(modifier: Modifier = Modifier) {
-    Column(
-        modifier = modifier.fillMaxWidth(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        Text("Profile")
-    }
-}
 
 
