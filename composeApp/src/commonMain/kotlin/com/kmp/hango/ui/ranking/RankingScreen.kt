@@ -9,9 +9,12 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.ListItem
@@ -25,12 +28,14 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import com.kmp.hango.components.CustomTitle
+import com.kmp.hango.constant.DEFAULT_BG_COLOR_DARK
 import com.kmp.hango.model.User
 import org.koin.compose.viewmodel.koinViewModel
 
@@ -38,42 +43,39 @@ import org.koin.compose.viewmodel.koinViewModel
 fun RankingScreen() {
     val viewModel: RankingViewModel = koinViewModel()
     val state by viewModel.uiState.collectAsState()
+    Column(
+        modifier = Modifier
+            .background(Color(DEFAULT_BG_COLOR_DARK))
+            .fillMaxSize(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center
+    ) {
+        if (state.textMessage.isNotEmpty()) {
+            CustomTitle(state.textMessage, color = Color.White)
+        }
 
-    if (state.searching) {
-        Column(
-            modifier = Modifier
-                .background(MaterialTheme.colorScheme.background)
-                .fillMaxSize(),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.Center
-        ) {
-            Text(text = state.textMessage)
+        if (state.searching) {
             Spacer(modifier = Modifier.height(10.dp))
             CircularProgressIndicator(
                 modifier = Modifier.size(50.dp),
                 strokeWidth = 5.dp,
-                color = MaterialTheme.colorScheme.primary
+                color = Color.White
             )
+        } else if (state.profiles.isNotEmpty()) {
 
-        }
-    } else {
-        if (state.profiles.isEmpty()) {
-            Column(
-                modifier = Modifier.fillMaxSize(),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
-            ) {
-                CustomTitle("Sem resultados")
-            }
-        } else {
             Column(
                 modifier = Modifier
-                    .background(MaterialTheme.colorScheme.background)
                     .fillMaxSize(),
                 horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.Center
+                verticalArrangement = Arrangement.Top
             ) {
-                CustomTitle("Ranking ${if (state.currentUserPositionOnRanking > 0) "(${state.currentUserPositionOnRanking}º)" else ""}")
+                Text(
+                    text = state.rankingMessage,
+                    modifier = Modifier.padding(bottom = 8.dp),
+                    fontSize = MaterialTheme.typography.headlineSmall.fontSize,
+                    color = Color.White,
+                    fontWeight = FontWeight.Bold,
+                )
 
                 LazyColumn {
                     itemsIndexed(state.profiles) { index, profile ->
@@ -89,10 +91,16 @@ fun RankingScreen() {
 private fun ScoreItemList(profile: User, index: Int) {
 
     val bgRankingColor: Color = when (index) {
-        1 -> Color.Red
-        2 -> Color.Blue
-        3 -> Color(0xFF14B306)
-        else -> if (index % 2 == 0) Color.Gray else Color.LightGray
+        1 -> Color(0XFFc7083b)
+        2 -> Color(0XFFe2144b)
+        3 -> Color(0XFFfd205b)
+        else -> if (index % 2 == 0) Color.Unspecified else Color.LightGray.copy(alpha = 0.2f)
+    }
+
+    val (textBgColor, textColor) = if (index <= 3) {
+        Pair(Color(0XFFf6c429), Color.Black)
+    } else {
+        Pair(Color.Transparent, Color.White)
     }
 
     ListItem(
@@ -101,14 +109,14 @@ private fun ScoreItemList(profile: User, index: Int) {
                 text = profile.name,
                 maxLines = 1,
                 overflow = TextOverflow.Ellipsis,
-                color = MaterialTheme.colorScheme.onSecondaryContainer.copy(alpha = 0.8f),
+                color = Color.White,
                 fontWeight = FontWeight.Medium
             )
         },
         supportingContent = {
             Text(
                 text = profile.score.toString(),
-                color = MaterialTheme.colorScheme.onSecondaryContainer.copy(alpha = 0.8f),
+                color = Color.White,
                 fontWeight = FontWeight.Bold,
             )
         },
@@ -120,29 +128,42 @@ private fun ScoreItemList(profile: User, index: Int) {
                     contentAlignment = Alignment.Center,
                     modifier = Modifier
                         .size(50.dp)
+                        .padding(10.dp)
+                        .clip(CircleShape)
+                        .background(textBgColor)
+                        .aspectRatio(1f)
                 ) {
                     Text(
                         text = index.toString(),
-                        color = if (index in 0..3) bgRankingColor else Color.Black,
+                        color = textColor,
                         fontWeight = FontWeight.Bold,
-                        fontSize = 20.sp
+                        fontSize = 16.sp
                     )
                 }
 
-                AsyncImage(
-                    profile.imageProfileUrl,
-                    contentDescription = "foto de perfil",
+                Spacer(modifier = Modifier.width(10.dp))
+
+                Box(
                     modifier = Modifier
                         .clip(RoundedCornerShape(20))
                         .aspectRatio(1f)
-                )
+                        .background(Color.White)
+                ) {
+                    AsyncImage(
+                        profile.imageProfileUrl,
+                        contentDescription = "foto de perfil",
+                        modifier = Modifier
+                            .fillMaxSize(),
+                        contentScale = ContentScale.Crop
+                    )
+                }
             }
         },
         trailingContent = {
 
         },
         colors = ListItemDefaults.colors(
-            containerColor = bgRankingColor.copy(alpha = 0.2f),
+            containerColor = bgRankingColor,
         ),
         modifier = Modifier
             .height(60.dp)
