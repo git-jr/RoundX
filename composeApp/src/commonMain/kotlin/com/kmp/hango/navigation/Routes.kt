@@ -16,7 +16,7 @@ sealed class Routes {
     data object Init : Routes()
 
     @Serializable
-    data object Search : Routes()
+    data object Ranking : Routes()
 
     @Serializable
     data object Orders : Routes()

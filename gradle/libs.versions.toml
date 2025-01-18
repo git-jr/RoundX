@@ -16,6 +16,7 @@ filekitCompose = "0.8.8"
 junit = "4.13.2"
 kotlin = "2.0.21"
 kotlin-serialization = "2.0.20"
+kotlinxSerializationJson = "1.7.3"
 
 navigationCompose = "2.8.0-alpha10"
 
@@ -25,13 +26,14 @@ koin = "4.0.0"
 
 google-services = "4.4.2"
 
-firebaseAuth = "2.1.0"
-firebaseStorage = "2.1.0"
+firebase-git-live = "2.1.0"
 
 [libraries]
 filekit-compose = { module = "io.github.vinceglb:filekit-compose", version.ref = "filekitCompose" }
 kotlin-test = { module = "org.jetbrains.kotlin:kotlin-test", version.ref = "kotlin" }
 kotlin-test-junit = { module = "org.jetbrains.kotlin:kotlin-test-junit", version.ref = "kotlin" }
+kotlinx-serialization-json = { module = "org.jetbrains.kotlinx:kotlinx-serialization-json", version.ref = "kotlinxSerializationJson" }
+
 junit = { group = "junit", name = "junit", version.ref = "junit" }
 androidx-core-ktx = { group = "androidx.core", name = "core-ktx", version.ref = "androidx-core-ktx" }
 androidx-test-junit = { group = "androidx.test.ext", name = "junit", version.ref = "androidx-test-junit" }
@@ -63,8 +65,10 @@ koin-core = { module = "io.insert-koin:koin-core", version.ref = "koin" }
 koin-compose = { module = "io.insert-koin:koin-compose", version.ref = "koin" }
 koin-composeVM = { module = "io.insert-koin:koin-compose-viewmodel", version.ref = "koin" }
 
-firebase-auth = { module = "dev.gitlive:firebase-auth", version.ref = "firebaseAuth" }
-firebase-storage = { module = "dev.gitlive:firebase-storage", version.ref = "firebaseStorage" }
+firebase-auth = { module = "dev.gitlive:firebase-auth", version.ref = "firebase-git-live" }
+firebase-storage = { module = "dev.gitlive:firebase-storage", version.ref = "firebase-git-live" }
+firebase-database = { module = "dev.gitlive:firebase-database", version.ref = "firebase-git-live" }
+#firebase-firestore = { module = "dev.gitlive:firebase-firestore", version.ref = "firebase-git-live" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

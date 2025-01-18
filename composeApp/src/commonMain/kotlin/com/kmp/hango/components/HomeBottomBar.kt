@@ -4,11 +4,9 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.material.Icon
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.Menu
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.outlined.Home
-import androidx.compose.material.icons.outlined.Menu
 import androidx.compose.material.icons.outlined.Person
 import androidx.compose.material.icons.outlined.Search
 import androidx.compose.material3.MaterialTheme
@@ -64,7 +62,6 @@ data class BottomItem(
 
 val bottomItems = listOf(
     BottomItem("Home", Icons.Filled.Home, Icons.Outlined.Home, Routes.Init),
-    BottomItem("Placar", Icons.Filled.Search, Icons.Outlined.Search, Routes.Search),
-//    BottomItem("Orders", Icons.Filled.Menu, Icons.Outlined.Menu, Routes.Orders),
+    BottomItem("Placar", Icons.Filled.Search, Icons.Outlined.Search, Routes.Ranking),
     BottomItem("Profile", Icons.Filled.Person, Icons.Outlined.Person, Routes.Profile)
 )

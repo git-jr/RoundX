@@ -15,7 +15,7 @@ kotlin {
     androidTarget {
         @OptIn(ExperimentalKotlinGradlePluginApi::class)
         compilerOptions {
-            jvmTarget.set(JvmTarget.JVM_11)
+            jvmTarget.set(JvmTarget.JVM_18)
         }
     }
 
@@ -55,12 +55,13 @@ kotlin {
             implementation(compose.components.uiToolingPreview)
             implementation(libs.androidx.lifecycle.viewmodel)
             implementation(libs.androidx.lifecycle.runtime.compose)
+            implementation(libs.kotlinx.serialization.json)
 
             // Navigation
             implementation(libs.navigation.compose)
 
             // serialization to Safe Args
-            implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.7.3")
+            implementation(libs.kotlinx.serialization.json)
 
             // Coil
             implementation(libs.coil.compose.core)
@@ -82,6 +83,7 @@ kotlin {
             // Firebase
             implementation(libs.firebase.auth)
             implementation(libs.firebase.storage)
+            implementation(libs.firebase.database)
 
             // Document and Image Selector
             implementation(libs.filekit.compose)
@@ -119,8 +121,8 @@ android {
         }
     }
     compileOptions {
-        sourceCompatibility = JavaVersion.VERSION_11
-        targetCompatibility = JavaVersion.VERSION_11
+        sourceCompatibility = JavaVersion.VERSION_18
+        targetCompatibility = JavaVersion.VERSION_18
     }
 }
 
