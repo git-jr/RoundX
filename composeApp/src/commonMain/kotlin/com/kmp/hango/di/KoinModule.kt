@@ -1,4 +1,4 @@
-package com.kmp.hango
+package com.kmp.hango.di
 
 import com.kmp.hango.ui.game.GameViewModel
 import com.kmp.hango.ui.login.LoginViewModel
