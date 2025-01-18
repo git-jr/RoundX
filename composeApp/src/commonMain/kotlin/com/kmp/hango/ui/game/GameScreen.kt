@@ -49,8 +49,10 @@ import coil3.compose.AsyncImage
 import com.kmp.hango.constant.DEFAULT_BG_COLOR
 import com.kmp.hango.extensions.toTime
 import hango.composeapp.generated.resources.Res
+import hango.composeapp.generated.resources.ic_coin
 import hango.composeapp.generated.resources.ic_o
 import hango.composeapp.generated.resources.ic_x
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import org.jetbrains.compose.resources.painterResource
 import org.koin.compose.viewmodel.koinViewModel
@@ -60,12 +62,19 @@ fun GameScreen(
     modifier: Modifier = Modifier,
     categoryId: String,
     onNavigateHome: () -> Unit = {},
+    onNavigateRanking: () -> Unit = {}
 ) {
     val viewModel: GameViewModel = koinViewModel()
     val state by viewModel.uiState.collectAsState()
 
     LaunchedEffect(Unit) {
         viewModel.prepareScreen(categoryId)
+    }
+
+    LaunchedEffect(state.goToRanking){
+        if(state.goToRanking){
+            onNavigateRanking()
+        }
     }
 
     val coroutineScope = rememberCoroutineScope()
@@ -99,30 +108,36 @@ fun GameScreen(
                 val buttonBgColor = Color(0XFFFFEE00)
 
                 Spacer(modifier = Modifier.size(16.dp))
-                Text(
-                    "Resultado",
-                    color = Color.White,
-                    fontSize = 24.sp,
-                    fontWeight = FontWeight.Bold
+
+                var rotationState by remember { mutableStateOf(180f) }
+                val rotationCoin by animateFloatAsState(
+                    targetValue = rotationState,
+                    animationSpec = tween(durationMillis = 500)
                 )
 
-                Spacer(modifier = Modifier.size(32.dp))
+                LaunchedEffect(Unit) {
+                    delay(500)
+                    rotationState += 180f
+                }
 
-                AsyncImage(
-                    "https://raw.githubusercontent.com/git-jr/sample-files/refs/heads/main/profile%20pics/profile_pic_emoji_1.png",
-                    contentDescription = "Imagem da pergunta",
+                Image(
+                    painterResource(Res.drawable.ic_coin),
+                    contentDescription = "Coin image",
                     contentScale = ContentScale.Crop,
                     modifier = Modifier
-                        .border(
-                            width = 4.dp,
-                            color = Color.White,
-                            shape = RoundedCornerShape(25.dp)
-                        )
-                        .size(150.dp)
-                        .clip(shape = RoundedCornerShape(25.dp)),
+                        .size(200.dp)
+                        .graphicsLayer(rotationY = rotationCoin),
                 )
 
-                Spacer(modifier = Modifier.size(32.dp))
+                Spacer(modifier = Modifier.size(16.dp))
+
+                Text(
+                    text = state.result,
+                    color = Color.White,
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold,
+                    textAlign = TextAlign.Center,
+                )
 
                 CorrectAnswer(
                     Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
@@ -143,21 +158,55 @@ fun GameScreen(
                         verticalArrangement = Arrangement.Center,
                     ) {
                         Text(
-                            text = state.result,
+                            text = state.messageText,
                             color = borderColor,
-                            fontSize = MaterialTheme.typography.h4.fontSize,
+                            fontSize = MaterialTheme.typography.h5.fontSize,
                             fontWeight = FontWeight.Bold
                         )
                     }
                 }
 
-                Spacer(modifier = Modifier.size(20.dp))
+                Text(
+                    text = state.syncMessage,
+                    color = Color.White,
+                    fontSize = 18.sp,
+                    fontWeight = FontWeight.Bold,
+                    textAlign = TextAlign.Center,
+                )
+
+                Spacer(modifier = Modifier.size(16.dp))
+
+                Button(
+                    onClick = {
+                        coroutineScope.launch {
+//                            val bitmap: ImageBitmap = graphicsLayer.toImageBitmap()
+//                            viewModel.shareResult(bitmap)
+                            viewModel.synchronizeProgress()
+                        }
+                    },
+                    shape = CircleShape,
+                    colors = ButtonDefaults.buttonColors(
+                        backgroundColor = Color(0XFF68ffa8),
+                        contentColor = Color(0XFF1f5b39)
+                    ),
+                    border = BorderStroke(
+                        color = Color(0XFF1f5b39),
+                        width = 4.dp
+                    ),
+                    elevation = ButtonDefaults.elevation(defaultElevation = 0.dp)
+                ) {
+                    Text(
+                        "SINCRONIZAR", fontSize = 20.sp, fontWeight = FontWeight.Bold,
+                        modifier = Modifier.padding(8.dp)
+                    )
+                }
+
 
                 Column(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
-                    Spacer(modifier = Modifier.size(20.dp))
+                    Spacer(modifier = Modifier.size(16.dp))
 
                     Button(
                         onClick = { onNavigateHome() },
@@ -181,39 +230,6 @@ fun GameScreen(
 
                     Spacer(modifier = Modifier.size(16.dp))
 
-                    Button(
-                        onClick = {
-                            coroutineScope.launch {
-                                val bitmap: ImageBitmap = graphicsLayer.toImageBitmap()
-                                viewModel.shareResult(bitmap)
-                            }
-                        },
-                        shape = CircleShape,
-                        colors = ButtonDefaults.buttonColors(
-                            backgroundColor = Color(0XFF68ffa8),
-                            contentColor = Color(0XFF1f5b39)
-                        ),
-                        border = BorderStroke(
-                            color = Color(0XFF1f5b39),
-                            width = 4.dp
-                        ),
-                        elevation = ButtonDefaults.elevation(defaultElevation = 0.dp)
-                    ) {
-                        Text(
-                            "COMPARTILHAR", fontSize = 20.sp, fontWeight = FontWeight.Bold,
-                            modifier = Modifier.padding(8.dp)
-                        )
-                    }
-
-                    Spacer(modifier = Modifier.size(20.dp))
-
-                    Text(
-                        text = "Bora compartilhar e desafiar seus amigos?",
-                        color = Color.White,
-                        fontSize = 18.sp,
-                        fontWeight = FontWeight.Bold,
-                        textAlign = TextAlign.Center,
-                    )
                 }
 
             }

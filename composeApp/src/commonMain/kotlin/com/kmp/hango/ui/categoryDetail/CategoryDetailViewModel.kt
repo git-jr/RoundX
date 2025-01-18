@@ -32,11 +32,13 @@ class CategoryDetailViewModel : ViewModel() {
                 _uiState.value = _uiState.value.copy(
                     textButton = it
                 )
-//                delay(500)
-                delay(0)
             }
             _uiState.value = _uiState.value.copy(
                 goToGame = true
+            )
+            delay(100)
+            _uiState.value = _uiState.value.copy(
+                goToGame = false
             )
         }
     }

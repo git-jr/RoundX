@@ -19,9 +19,6 @@ sealed class Routes {
     data object Ranking : Routes()
 
     @Serializable
-    data object Orders : Routes()
-
-    @Serializable
     data object Profile : Routes()
 
     @Serializable

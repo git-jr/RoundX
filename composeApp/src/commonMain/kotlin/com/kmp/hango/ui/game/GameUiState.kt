@@ -12,5 +12,8 @@ data class GameUiState(
     val isGameFinished: Boolean = false,
     val score: Int = 0,
     val result: String = "",
-    val currentTime: Int = 0
+    val currentTime: Int = 0,
+    val messageText: String = "",
+    val syncMessage: String = "Sincronize seu progresso para competir com outros jogadores!",
+    val goToRanking: Boolean = false,
 )
