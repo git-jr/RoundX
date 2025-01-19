@@ -128,9 +128,8 @@ class GameViewModel(
                     user.let {
                         val lastScore = user.score
                         val currentScore = uiState.value.score
-                        if (currentScore > lastScore) {
-                            userRef.updateChildren(hashMapOf("score" to currentScore))
-                        }
+                        val newScore = currentScore + lastScore
+                        userRef.updateChildren(hashMapOf("score" to newScore))
                     }
                     _uiState.value = uiState.value.copy(
                         syncMessage = "Sincronizado com sucesso!"

@@ -18,7 +18,7 @@ val appModule = module {
     viewModel { LoginViewModel() }
     viewModel { RegisterViewModel() }
     viewModel { ProfileViewModel() }
-    viewModel { RankingViewModel() }
+    viewModel { RankingViewModel(get()) }
 }
 
 fun initializeKoin(

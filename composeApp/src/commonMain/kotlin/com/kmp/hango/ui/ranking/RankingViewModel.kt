@@ -1,7 +1,9 @@
 package com.kmp.hango.ui.ranking
 
+import androidx.compose.ui.graphics.ImageBitmap
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.kmp.hango.ScreenshotManager
 import com.kmp.hango.model.User
 import com.kmp.hango.network.firebase.UserFireStore
 import dev.gitlive.firebase.Firebase
@@ -12,7 +14,9 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-class RankingViewModel : ViewModel() {
+class RankingViewModel(
+    private val screenshotManager: ScreenshotManager
+) : ViewModel() {
     private val _uiState = MutableStateFlow(RankingState())
     val uiState: StateFlow<RankingState> = _uiState.asStateFlow()
 
@@ -114,24 +118,48 @@ class RankingViewModel : ViewModel() {
             _uiState.value = _uiState.value.copy(
                 profiles = profilesTest,
                 searching = false,
-                textMessage = ""
+                textMessage = "",
+                rankingMessage = "Sua posição atual é: 13º",
+                showSnackBar = true
             )
         }
     }
 
-
     private fun setupCurrentUserPositionOnRanking() {
         viewModelScope.launch {
             val userId = auth.currentUser?.uid
-            val currentUserPositionOnRanking =
-                _uiState.value.profiles.indexOfFirst { it.id == userId } + 1
-            val rankingMessage =
-                "Sua posição atual é: ${if (currentUserPositionOnRanking > 0) "${currentUserPositionOnRanking}º" else "Você ainda não pontuou"}"
+            val currentUserPositionOnRanking = _uiState.value.profiles.indexOfFirst { it.id == userId } + 1
+            val rankingMessage = "Sua posição atual é: ${if (currentUserPositionOnRanking > 0) "${currentUserPositionOnRanking}º" else "Você ainda não pontuou"}"
+            val shareMessage = "Já sou Top ${currentUserPositionOnRanking} no Round X!"
+            val currentUserPhotoUrl = _uiState.value.profiles.firstOrNull { it.id == userId }?.imageProfileUrl ?: ""
 
             _uiState.value = _uiState.value.copy(
-                rankingMessage = rankingMessage
+                rankingMessage = rankingMessage,
+                shareMessage = shareMessage,
+                textMessage = "",
+                currentUserPhotoUrl = currentUserPhotoUrl,
+                currentUserPositionOnRanking = currentUserPositionOnRanking
             )
         }
+    }
+
+    fun shareRanking(bitmap: ImageBitmap) {
+        screenshotManager.shareImage(bitmap)
+        _uiState.value = _uiState.value.copy(
+            showRankingShare = false
+        )
+    }
+
+    fun showSnackBar(show: Boolean) {
+        _uiState.value = _uiState.value.copy(
+            showSnackBar = show
+        )
+    }
+
+    fun prepareShareRanking() {
+        _uiState.value = _uiState.value.copy(
+            showRankingShare = true
+        )
     }
 
 }
