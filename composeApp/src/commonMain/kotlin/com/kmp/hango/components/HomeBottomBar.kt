@@ -16,8 +16,10 @@ import androidx.compose.material3.NavigationBarItemDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
+import com.kmp.hango.constant.DEFAULT_BG_COLOR
 import com.kmp.hango.navigation.Routes
 
 
@@ -26,14 +28,19 @@ fun HomeBottomBar(
     externalIndex: Int,
     onItemSelected: (BottomItem, Int) -> Unit
 ) {
-    NavigationBar {
+    NavigationBar(
+        modifier = Modifier,
+        containerColor = Color(DEFAULT_BG_COLOR).copy(alpha = 0.9f),
+        contentColor = Color.White
+    ) {
         bottomItems.forEachIndexed { index, item ->
             NavigationBarItem(
                 icon = {
                     Icon(
                         imageVector = if (externalIndex == index) item.enabledIcon else item.disabledIcon,
                         contentDescription = item.title,
-                        modifier = Modifier.size(24.dp)
+                        modifier = Modifier.size(24.dp),
+                        tint = if (externalIndex == index) Color(DEFAULT_BG_COLOR) else Color.White
                     )
                 },
                 label = { Text(item.title) },
@@ -42,11 +49,10 @@ fun HomeBottomBar(
                     onItemSelected(item, index)
                 },
                 colors = NavigationBarItemDefaults.colors(
-                    selectedIconColor = MaterialTheme.colorScheme.onSecondaryContainer,
-                    unselectedIconColor = MaterialTheme.colorScheme.onSurface,
-                    selectedTextColor = MaterialTheme.colorScheme.onSecondaryContainer,
-                    indicatorColor = MaterialTheme.colorScheme.primaryContainer,
-                    unselectedTextColor = MaterialTheme.colorScheme.onSurface,
+                    unselectedIconColor = Color.White,
+                    selectedTextColor = Color.White,
+                    indicatorColor = Color.White.copy(alpha = 0.5f),
+                    unselectedTextColor = Color.White,
                 )
             )
         }

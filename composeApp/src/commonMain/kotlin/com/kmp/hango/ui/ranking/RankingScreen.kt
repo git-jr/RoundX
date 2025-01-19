@@ -146,6 +146,14 @@ fun RankingScreen() {
                         val borderColor = Color(0XFFC57601)
                         val buttonBgColor = Color(0XFFFFEE00)
 
+                        CircularProgressIndicator(
+                            modifier = Modifier.size(50.dp),
+                            strokeWidth = 5.dp,
+                            color = Color.White
+                        )
+
+                        Spacer(modifier = Modifier.size(16.dp))
+
                         Column(
                             modifier = Modifier
                                 .drawWithContent {
@@ -237,7 +245,6 @@ fun RankingScreen() {
                     }
                 }
             }
-
         }
     }
 }
