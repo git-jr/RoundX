@@ -19,6 +19,7 @@ kotlin-serialization = "2.0.20"
 kotlinxSerializationJson = "1.7.3"
 
 navigationCompose = "2.8.0-alpha10"
+datastore = "1.1.1"
 
 coil = "3.0.0-alpha06"
 ktor = "2.3.11"
@@ -68,7 +69,9 @@ koin-composeVM = { module = "io.insert-koin:koin-compose-viewmodel", version.ref
 firebase-auth = { module = "dev.gitlive:firebase-auth", version.ref = "firebase-git-live" }
 firebase-storage = { module = "dev.gitlive:firebase-storage", version.ref = "firebase-git-live" }
 firebase-database = { module = "dev.gitlive:firebase-database", version.ref = "firebase-git-live" }
-#firebase-firestore = { module = "dev.gitlive:firebase-firestore", version.ref = "firebase-git-live" }
+
+datastore = { module = "androidx.datastore:datastore", version.ref = "datastore" }
+datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastore" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

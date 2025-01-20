@@ -11,7 +11,9 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-class ProfileViewModel : ViewModel() {
+class ProfileViewModel(
+
+) : ViewModel() {
 
     private val _uiState = MutableStateFlow(ProfileUiState())
     var uiState = _uiState.asStateFlow()
