@@ -217,7 +217,7 @@ fun GameScreen(
 
             }
         } else {
-            GameInProgress(modifier, state, bgColor, viewModel)
+            GameInProgress(modifier, state, viewModel)
         }
 
     }
@@ -227,7 +227,6 @@ fun GameScreen(
 private fun GameInProgress(
     modifier: Modifier,
     state: GameUiState,
-    bgColor: Color,
     viewModel: GameViewModel
 ) {
     Column(

@@ -1,5 +1,9 @@
 package com.kmp.hango.ui.profile
 
+import androidx.datastore.core.DataStore
+import androidx.datastore.preferences.core.Preferences
+import androidx.datastore.preferences.core.booleanPreferencesKey
+import androidx.datastore.preferences.core.edit
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.kmp.hango.network.firebase.UserFireStore
@@ -9,10 +13,11 @@ import dev.gitlive.firebase.auth.auth
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 class ProfileViewModel(
-
+    private val dataStore: DataStore<Preferences>
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(ProfileUiState())
@@ -23,6 +28,7 @@ class ProfileViewModel(
 
     init {
         checkLogin()
+        loadPreferences()
     }
 
     private fun checkLogin() {
@@ -32,6 +38,13 @@ class ProfileViewModel(
             loadInfos(user.uid)
         } ?: run {
             _uiState.value = _uiState.value.copy(showGoToLogin = true, load = false)
+        }
+    }
+
+    private fun loadPreferences() {
+        viewModelScope.launch {
+            val skipCountdown = dataStore.data.first()[booleanPreferencesKey("skipCountdown")] ?: false
+            _uiState.value = _uiState.value.copy(skipCountdown = skipCountdown)
         }
     }
 
@@ -91,6 +104,15 @@ class ProfileViewModel(
         viewModelScope.launch {
             firebaseAuth.signOut()
             _uiState.value = _uiState.value.copy(goToLogin = true)
+        }
+    }
+
+    fun setSkipCountdown(skip: Boolean) {
+        viewModelScope.launch {
+            dataStore.edit {
+                it[booleanPreferencesKey("skipCountdown")] = skip
+            }
+            _uiState.value = _uiState.value.copy(skipCountdown = skip)
         }
     }
 }

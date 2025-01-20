@@ -1,5 +1,6 @@
 package com.kmp.hango.di
 
+import com.kmp.hango.ui.categoryDetail.CategoryDetailViewModel
 import com.kmp.hango.ui.game.GameViewModel
 import com.kmp.hango.ui.login.LoginViewModel
 import com.kmp.hango.ui.profile.ProfileViewModel
@@ -14,10 +15,11 @@ import org.koin.dsl.module
 expect val targetModule: Module
 
 val appModule = module {
-    viewModel { GameViewModel(get()) }
+    viewModel { GameViewModel() }
     viewModel { LoginViewModel() }
     viewModel { RegisterViewModel() }
-    viewModel { ProfileViewModel() }
+    viewModel { ProfileViewModel(get()) }
+    viewModel { CategoryDetailViewModel(get()) }
     viewModel { RankingViewModel(get()) }
 }
 

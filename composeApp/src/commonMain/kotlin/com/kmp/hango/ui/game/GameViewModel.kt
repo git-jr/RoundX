@@ -1,9 +1,7 @@
 package com.kmp.hango.ui.game
 
-import androidx.compose.ui.graphics.ImageBitmap
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.kmp.hango.ScreenshotManager
 import com.kmp.hango.extensions.toTime
 import com.kmp.hango.extensions.zeroRound
 import com.kmp.hango.model.User
@@ -17,9 +15,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
-class GameViewModel(
-    private val screenshotManager: ScreenshotManager
-) : ViewModel() {
+class GameViewModel : ViewModel() {
 
     private val _uiState = MutableStateFlow(GameUiState())
     var uiState = _uiState.asStateFlow()

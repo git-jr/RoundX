@@ -11,5 +11,6 @@ data class ProfileUiState(
     val imageProfileUrl: String = "",
     val name: String = "",
     val email: String = "",
-    val score: Int = 0
+    val score: Int = 0,
+    val skipCountdown: Boolean = false
 )
