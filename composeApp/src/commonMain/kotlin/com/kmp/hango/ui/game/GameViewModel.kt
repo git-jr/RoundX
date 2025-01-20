@@ -106,10 +106,6 @@ class GameViewModel(
         return (basePoints + timeRest).toInt()
     }
 
-    fun shareResult(bitmap: ImageBitmap) {
-        screenshotManager.shareImage(bitmap)
-    }
-
     fun synchronizeProgress() {
         if (Firebase.auth.currentUser == null) {
             _uiState.value = uiState.value.copy(

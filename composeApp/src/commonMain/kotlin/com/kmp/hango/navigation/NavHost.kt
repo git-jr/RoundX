@@ -89,7 +89,7 @@ fun NavHost(
 
                     composable<Routes.Login> {
                         LoginScreen(
-                            onNavigateInit = { navController.navigate(Routes.Init) },
+                            onNavigateInit = { navController.navigate(Routes.Profile) },
                             onNavigateRegister = { navController.navigate(Routes.Register) }
                         )
                     }

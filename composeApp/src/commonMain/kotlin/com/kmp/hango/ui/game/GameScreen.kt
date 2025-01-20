@@ -71,28 +71,15 @@ fun GameScreen(
         viewModel.prepareScreen(categoryId)
     }
 
-    LaunchedEffect(state.goToRanking){
-        if(state.goToRanking){
+    LaunchedEffect(state.goToRanking) {
+        if (state.goToRanking) {
             onNavigateRanking()
         }
     }
 
-    val coroutineScope = rememberCoroutineScope()
-    val graphicsLayer = rememberGraphicsLayer()
-
-
     val bgColor = Color(DEFAULT_BG_COLOR)
     Column(
         modifier = modifier
-            .drawWithContent {
-                // call record to capture the content in the graphics layer
-                graphicsLayer.record {
-                    // draw the contents of the composable into the graphics layer
-                    this@drawWithContent.drawContent()
-                }
-                // draw the graphics layer on the visible canvas
-                drawLayer(graphicsLayer)
-            }
             .background(bgColor)
             .fillMaxSize()
             .padding(16.dp),
@@ -178,11 +165,7 @@ fun GameScreen(
 
                 Button(
                     onClick = {
-                        coroutineScope.launch {
-//                            val bitmap: ImageBitmap = graphicsLayer.toImageBitmap()
-//                            viewModel.shareResult(bitmap)
-                            viewModel.synchronizeProgress()
-                        }
+                        viewModel.synchronizeProgress()
                     },
                     shape = CircleShape,
                     colors = ButtonDefaults.buttonColors(
