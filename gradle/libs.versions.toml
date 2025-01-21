@@ -28,6 +28,7 @@ koin = "4.0.0"
 google-services = "4.4.2"
 
 firebase-git-live = "2.1.0"
+foundationAndroid = "1.7.6"
 
 [libraries]
 filekit-compose = { module = "io.github.vinceglb:filekit-compose", version.ref = "filekitCompose" }
@@ -72,6 +73,7 @@ firebase-database = { module = "dev.gitlive:firebase-database", version.ref = "f
 
 datastore = { module = "androidx.datastore:datastore", version.ref = "datastore" }
 datastore-preferences = { module = "androidx.datastore:datastore-preferences", version.ref = "datastore" }
+androidx-foundation-android = { group = "androidx.compose.foundation", name = "foundation-android", version.ref = "foundationAndroid" }
 
 [plugins]
 androidApplication = { id = "com.android.application", version.ref = "agp" }

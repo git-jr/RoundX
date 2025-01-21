@@ -15,6 +15,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
 import androidx.compose.material.OutlinedTextField
@@ -29,6 +31,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
@@ -100,6 +103,7 @@ fun LoginScreen(
             onValueChange = { viewModel.updateUsername(it) },
             label = { Text("Nome de Usuário") },
             modifier = Modifier.fillMaxWidth(),
+            maxLines = 1,
             colors = TextFieldDefaults.outlinedTextFieldColors(
                 focusedBorderColor = Color.White,
                 unfocusedBorderColor = Color.White,
@@ -108,6 +112,9 @@ fun LoginScreen(
                 placeholderColor = Color.White,
                 unfocusedLabelColor = Color.White,
                 focusedLabelColor = Color.White
+            ),
+            keyboardOptions = KeyboardOptions.Default.copy(
+                imeAction = ImeAction.Next
             )
         )
 
@@ -118,6 +125,7 @@ fun LoginScreen(
             onValueChange = { viewModel.updatePassword(it) },
             label = { Text("Senha") },
             modifier = Modifier.fillMaxWidth(),
+            maxLines = 1,
             visualTransformation = PasswordVisualTransformation(),
             colors = TextFieldDefaults.outlinedTextFieldColors(
                 focusedBorderColor = Color.White,
@@ -127,7 +135,13 @@ fun LoginScreen(
                 placeholderColor = Color.White,
                 unfocusedLabelColor = Color.White,
                 focusedLabelColor = Color.White
-            )
+            ),
+            keyboardOptions = KeyboardOptions.Default.copy(
+                imeAction = ImeAction.Done
+            ),
+            keyboardActions = KeyboardActions(
+                onDone = { viewModel.login() }
+            ),
         )
 
         Spacer(modifier = Modifier.height(16.dp))

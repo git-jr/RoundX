@@ -14,15 +14,22 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.Button
 import androidx.compose.material.ButtonDefaults
+import androidx.compose.material.CircularProgressIndicator
 import androidx.compose.material.Icon
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
 import androidx.compose.material.TextFieldDefaults
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
+import androidx.compose.material.icons.filled.Face
 import androidx.compose.material.icons.filled.Person
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -34,6 +41,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import coil3.compose.AsyncImage
@@ -57,13 +65,16 @@ fun RegisterScreen(
         }
     }
 
+    val scrollState = rememberScrollState()
+
     Column(
         modifier = modifier
             .background(Color(DEFAULT_BG_COLOR_DARK))
             .fillMaxSize()
+            .verticalScroll(scrollState)
             .padding(16.dp),
         verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
+        horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Row(
             modifier = Modifier
@@ -83,8 +94,8 @@ fun RegisterScreen(
 
         Box(
             modifier = Modifier
-                .size(200.dp)
-                .clip(CircleShape)
+                .size(150.dp)
+                .clip(RoundedCornerShape(30.dp))
                 .background(Color.White)
                 .clickable {
                     viewModel.selectImage()
@@ -95,15 +106,29 @@ fun RegisterScreen(
                 AsyncImage(
                     state.imageByteArray,
                     contentDescription = "Logo round x name",
-                    modifier = Modifier.size(200.dp),
+                    modifier = Modifier.size(150.dp),
                     contentScale = ContentScale.Crop
                 )
             } ?: run {
                 Icon(
-                    Icons.Default.Person,
+                    Icons.Default.Face,
                     contentDescription = "Icone de usuário",
                     tint = Color(0XFF8c1c3a)
                 )
+            }
+
+            if (state.load) {
+
+                Box(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .background(Color(DEFAULT_BG_COLOR_DARK).copy(alpha = 0.8f)),
+                    contentAlignment = Alignment.Center
+                ) {
+                    CircularProgressIndicator(
+                        color = Color(0XFFff235e)
+                    )
+                }
             }
         }
 
@@ -111,21 +136,27 @@ fun RegisterScreen(
 
         if (state.loginError) {
             Text(
-                text = "Erro ao cadastrar",
+                text = state.loginErrorMessage,
                 color = Color.Yellow,
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier
-                    .clip(CircleShape)
                     .padding(8.dp)
-                    .align(Alignment.CenterHorizontally)
+            )
+
+            Text(
+                text = state.loginErrorMessageDetail,
+                color = Color.Yellow,
+                modifier = Modifier
+                    .padding(8.dp, 4.dp)
             )
         }
 
         OutlinedTextField(
-            value = state.email,
-            onValueChange = { viewModel.updateEmail(it) },
+            value = state.userName,
+            onValueChange = { viewModel.updateUsername(it) },
             label = { Text("Nome de Usuário") },
             modifier = Modifier.fillMaxWidth(),
+            maxLines = 1,
             colors = TextFieldDefaults.outlinedTextFieldColors(
                 focusedBorderColor = Color.White,
                 unfocusedBorderColor = Color.White,
@@ -134,6 +165,31 @@ fun RegisterScreen(
                 placeholderColor = Color.White,
                 unfocusedLabelColor = Color.White,
                 focusedLabelColor = Color.White
+            ),
+            keyboardOptions = KeyboardOptions.Default.copy(
+                imeAction = ImeAction.Next
+            )
+        )
+
+        Spacer(modifier = Modifier.height(16.dp))
+
+        OutlinedTextField(
+            value = state.email,
+            onValueChange = { viewModel.updateEmail(it) },
+            label = { Text("Email") },
+            modifier = Modifier.fillMaxWidth(),
+            maxLines = 1,
+            colors = TextFieldDefaults.outlinedTextFieldColors(
+                focusedBorderColor = Color.White,
+                unfocusedBorderColor = Color.White,
+                cursorColor = Color.White,
+                textColor = Color.White,
+                placeholderColor = Color.White,
+                unfocusedLabelColor = Color.White,
+                focusedLabelColor = Color.White
+            ),
+            keyboardOptions = KeyboardOptions.Default.copy(
+                imeAction = ImeAction.Next
             )
         )
 
@@ -144,6 +200,7 @@ fun RegisterScreen(
             onValueChange = { viewModel.updatePassword(it) },
             label = { Text("Senha") },
             modifier = Modifier.fillMaxWidth(),
+            maxLines = 1,
             visualTransformation = PasswordVisualTransformation(),
             colors = TextFieldDefaults.outlinedTextFieldColors(
                 focusedBorderColor = Color.White,
@@ -153,6 +210,9 @@ fun RegisterScreen(
                 placeholderColor = Color.White,
                 unfocusedLabelColor = Color.White,
                 focusedLabelColor = Color.White
+            ),
+            keyboardOptions = KeyboardOptions.Default.copy(
+                imeAction = ImeAction.Next
             )
         )
 
@@ -162,6 +222,7 @@ fun RegisterScreen(
             value = state.confirmPassword,
             onValueChange = { viewModel.updateConfirmPassword(it) },
             label = { Text("Confirmar Senha") },
+            maxLines = 1,
             modifier = Modifier.fillMaxWidth(),
             visualTransformation = PasswordVisualTransformation(),
             colors = TextFieldDefaults.outlinedTextFieldColors(
@@ -172,7 +233,13 @@ fun RegisterScreen(
                 placeholderColor = Color.White,
                 unfocusedLabelColor = Color.White,
                 focusedLabelColor = Color.White
-            )
+            ),
+            keyboardOptions = KeyboardOptions.Default.copy(
+                imeAction = ImeAction.Done
+            ),
+            keyboardActions = KeyboardActions(
+                onDone = { viewModel.register() }
+            ),
         )
 
         Spacer(modifier = Modifier.height(16.dp))
@@ -198,6 +265,7 @@ fun RegisterScreen(
                 color = Color.White,
             )
         }
+
 
         Spacer(modifier = Modifier.height(8.dp))
 

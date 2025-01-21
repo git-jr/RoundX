@@ -50,11 +50,11 @@ fun NavHost(
 
     LaunchedEffect(currentRouteName) {
         currentRouteName?.let {
-            val gameRoute = Routes.Game.serializer().descriptor.serialName
-            val detailRoute = Routes.CategoryDetail.serializer().descriptor.serialName
-            val loginRoute = Routes.Login.serializer().descriptor.serialName
+            val initRoute = Routes.Init.serializer().descriptor.serialName
+            val rankingRoute = Routes.Ranking.serializer().descriptor.serialName
+            val profileRoute = Routes.Profile.serializer().descriptor.serialName
             val route = it.substringBefore("/")
-            showBottomBar = route !in listOf(gameRoute, detailRoute, loginRoute)
+            showBottomBar = route in listOf(initRoute, rankingRoute, profileRoute)
         }
     }
 
