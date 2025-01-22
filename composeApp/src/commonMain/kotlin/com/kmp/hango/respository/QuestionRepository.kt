@@ -1,5 +1,7 @@
 package com.kmp.hango.respository
 
+import com.kmp.hango.model.Question
+
 val questionSamples =
     listOf(
         // Categoria: GEOGRAFIA (id = "123")
@@ -223,12 +225,3 @@ val questionSamples =
             correct = true
         )
     )
-
-
-data class Question(
-    val id: String,
-    val categoryId: String,
-    val content: String,
-    val image: String,
-    val correct: Boolean
-)

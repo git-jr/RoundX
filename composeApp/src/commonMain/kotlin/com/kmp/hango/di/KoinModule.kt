@@ -1,5 +1,7 @@
 package com.kmp.hango.di
 
+import com.kmp.hango.data.database.AppDatabase
+import com.kmp.hango.data.database.getDatabaseBuilder
 import com.kmp.hango.ui.categoryDetail.CategoryDetailViewModel
 import com.kmp.hango.ui.game.GameViewModel
 import com.kmp.hango.ui.login.LoginViewModel
@@ -18,9 +20,12 @@ val appModule = module {
     viewModel { GameViewModel() }
     viewModel { LoginViewModel() }
     viewModel { RegisterViewModel() }
-    viewModel { ProfileViewModel(get()) }
+    viewModel { ProfileViewModel(get(), get()) }
     viewModel { CategoryDetailViewModel(get()) }
     viewModel { RankingViewModel(get()) }
+
+    single { getDatabaseBuilder(get()) }
+    factory { get<AppDatabase>().questionDao() }
 }
 
 fun initializeKoin(

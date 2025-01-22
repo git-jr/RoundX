@@ -1,6 +1,6 @@
 package com.kmp.hango.ui.game
 
-import com.kmp.hango.respository.Question
+import com.kmp.hango.model.Question
 
 data class GameUiState(
     val currentQuestion: Question? = null,
