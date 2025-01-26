@@ -28,4 +28,8 @@ interface QuestionDao {
 
     @Delete
     suspend fun delete(question: Question)
+
+    @Query(" SELECT * FROM question  WHERE categoryId = :categoryId GROUP BY content ORDER BY RANDOM() LIMIT 10")
+    fun getRandomQuestions(categoryId: String): Flow<List<Question>>
+
 }

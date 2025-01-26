@@ -47,6 +47,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import com.kmp.hango.constant.DEFAULT_BG_COLOR
+import com.kmp.hango.constant.DEFAULT_BG_COLOR_DARK
 import com.kmp.hango.extensions.toTime
 import hango.composeapp.generated.resources.Res
 import hango.composeapp.generated.resources.ic_coin
@@ -237,29 +238,47 @@ private fun GameInProgress(
         Column {
             GameStatus(state)
 
-            AsyncImage(
-                "https://raw.githubusercontent.com/git-jr/sample-files/refs/heads/main/profile%20pics/profile_pic_emoji_1.png",
-                contentDescription = "Imagem da pergunta",
-                contentScale = ContentScale.Crop,
+            if (state.currentQuestion?.image?.isNotEmpty() == true) {
+                AsyncImage(
+                    "https://raw.githubusercontent.com/git-jr/sample-files/refs/heads/main/profile%20pics/profile_pic_emoji_1.png",
+                    contentDescription = "Imagem da pergunta",
+                    contentScale = ContentScale.Crop,
+                    modifier = Modifier
+                        .border(
+                            width = 4.dp,
+                            color = Color.White,
+                            shape = RoundedCornerShape(25.dp)
+                        )
+                        .fillMaxWidth()
+                        .height(200.dp)
+                        .clip(shape = RoundedCornerShape(25.dp)),
+                )
+            }
+
+            Spacer(modifier = Modifier.padding(16.dp))
+
+            Row(
                 modifier = Modifier
                     .border(
                         width = 4.dp,
-                        color = Color.White,
+                        color = Color(state.categoryColor),
                         shape = RoundedCornerShape(25.dp)
                     )
                     .fillMaxWidth()
                     .height(200.dp)
-                    .clip(shape = RoundedCornerShape(25.dp)),
-            )
-
-            Spacer(modifier = Modifier.padding(16.dp))
-            Text(
-                state.currentQuestion?.content.toString(),
-                color = Color.White,
-                fontSize = 16.sp,
-                textAlign = TextAlign.Center,
-                modifier = Modifier.align(Alignment.CenterHorizontally)
-            )
+                    .clip(shape = RoundedCornerShape(25.dp))
+                    .background(Color.White)
+                    .padding(8.dp),
+                horizontalArrangement = Arrangement.Center,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    state.currentQuestion?.content.toString(),
+                    color = Color(DEFAULT_BG_COLOR_DARK),
+                    fontSize = 18.sp,
+                    textAlign = TextAlign.Center
+                )
+            }
         }
 
         ButtonsTrueFalse(viewModel)

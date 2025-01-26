@@ -5,7 +5,8 @@ import androidx.lifecycle.viewModelScope
 import com.kmp.hango.extensions.toTime
 import com.kmp.hango.extensions.zeroRound
 import com.kmp.hango.model.User
-import com.kmp.hango.respository.questionSamples
+import com.kmp.hango.respository.QuestionRepository
+import com.kmp.hango.respository.categorySample
 import dev.gitlive.firebase.Firebase
 import dev.gitlive.firebase.auth.auth
 import dev.gitlive.firebase.database.database
@@ -15,7 +16,9 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
-class GameViewModel : ViewModel() {
+class GameViewModel(
+    private val questionRepository: QuestionRepository,
+) : ViewModel() {
 
     private val _uiState = MutableStateFlow(GameUiState())
     var uiState = _uiState.asStateFlow()
@@ -81,18 +84,19 @@ class GameViewModel : ViewModel() {
     }
 
     fun prepareScreen(categoryId: String) {
-        questionSamples.filter { it.categoryId == categoryId }.let { questions ->
-            val questionsShuffled = questions.shuffled()
-            _uiState.value = _uiState.value.copy(
-                currentQuestion = questionsShuffled.first(),
-                questions = questionsShuffled,
-                currentQuestionIndex = 0,
-                currentCount = "01/${questionsShuffled.size.zeroRound()}",
-                answers = List(questionsShuffled.size) { null }
-            )
+        viewModelScope.launch {
+            questionRepository.getRandomQuestions(categoryId).first().let { questions ->
+                _uiState.value = _uiState.value.copy(
+                    currentQuestion = questions.first(),
+                    questions = questions,
+                    currentQuestionIndex = 0,
+                    currentCount = "01/${questions.size.zeroRound()}",
+                    answers = List(questions.size) { null },
+                    categoryColor = categorySample.first { it.id == categoryId }.color
+                )
+            }
+            initTimer()
         }
-
-        initTimer()
     }
 
     private fun calculateScore(correctAnswers: Int, time: Int): Int {

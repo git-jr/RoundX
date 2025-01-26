@@ -90,7 +90,7 @@ fun NavHost(
 
                     composable<Routes.Splash> {
                         SplashScreen(
-                            onNavigateInit = { navController.navigate(Routes.Profile) },
+                            onNavigateInit = { navController.navigate(Routes.Init) },
                             onNavigateLogin = { navController.navigate(Routes.Login) }
                         )
                     }
@@ -98,7 +98,7 @@ fun NavHost(
 
                     composable<Routes.Login> {
                         LoginScreen(
-                            onNavigateInit = { navController.navigate(Routes.Profile) },
+                            onNavigateInit = { navController.navigate(Routes.Init) },
                             onNavigateRegister = { navController.navigate(Routes.Register) }
                         )
                     }

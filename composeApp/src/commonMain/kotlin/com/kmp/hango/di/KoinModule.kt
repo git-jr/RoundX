@@ -24,7 +24,7 @@ import org.koin.dsl.module
 expect val targetModule: Module
 
 val appModule = module {
-    viewModel { GameViewModel() }
+    viewModel { GameViewModel(get()) }
     viewModel { LoginViewModel(get()) }
     viewModel { RegisterViewModel() }
     viewModel { ProfileViewModel(get()) }
