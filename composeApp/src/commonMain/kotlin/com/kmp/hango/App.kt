@@ -20,11 +20,14 @@ import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.dp
 import com.kmp.hango.constant.DEFAULT_BG_COLOR_DARK
 import com.kmp.hango.navigation.NavHost
+import com.kmp.hango.ui.theme.RoundXTypography
 import org.koin.compose.KoinContext
 
 @Composable
 fun App() {
-    MaterialTheme {
+    MaterialTheme(
+        typography = RoundXTypography(),
+    ) {
         KoinContext {
             Scaffold { innerPadding ->
                 val isIos = getPlatform().name.contains("iOS")
@@ -48,7 +51,6 @@ fun App() {
                     NavHost(
                         onChangeColor = { color ->
                             bgColor = Color(color)
-                            println("Nova cor: $color")
                         }
                     )
                 }
