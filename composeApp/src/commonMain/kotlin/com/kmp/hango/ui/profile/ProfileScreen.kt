@@ -41,10 +41,12 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import com.kmp.hango.components.ConfirmationDialog
+import com.kmp.hango.components.LoadScreen
 import com.kmp.hango.constant.DEFAULT_BG_COLOR
 import com.kmp.hango.constant.DEFAULT_BG_COLOR_DARK
 import hango.composeapp.generated.resources.Res
@@ -59,13 +61,13 @@ fun ProfileScreen(
     modifier: Modifier = Modifier,
     onNavigateLogin: () -> Unit
 ) {
-
     Column(
         modifier = modifier
             .fillMaxSize()
             .background(
                 color = Color(DEFAULT_BG_COLOR_DARK)
-            ),
+            )
+            .padding(16.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
@@ -192,40 +194,41 @@ fun ProfileScreen(
         }
 
         if (state.load) {
-            Text(text = "Carregando...", color = Color.White)
+            LoadScreen()
         }
 
         state.error?.let {
-            Text(text = it)
+            Text(
+                text = it,
+                color = Color.White,
+                fontSize = 18.sp,
+                textAlign = TextAlign.Center,
+                fontWeight = FontWeight.Bold,
+            )
             Spacer(modifier = Modifier.size(16.dp))
             if (state.showGoToLogin) {
                 Button(
                     onClick = {
-                        onNavigateLogin()
-                    }
+                        viewModel.showLogoutDialog(true)
+                    },
+                    modifier = Modifier.size(200.dp, 56.dp),
+                    shape = RoundedCornerShape(25.dp),
+                    border = BorderStroke(
+                        color = Color(0XFF8c1c3a),
+                        width = 4.dp
+                    ),
+                    colors = ButtonDefaults.buttonColors(
+                        backgroundColor = Color(0XFFff235e),
+                        contentColor = Color(0XFF8c1c3a)
+                    ),
+                    elevation = ButtonDefaults.elevation(defaultElevation = 0.dp)
                 ) {
-                    Button(
-                        onClick = {
-                            viewModel.showLogoutDialog(true)
-                        },
-                        modifier = Modifier.size(200.dp, 56.dp),
-                        shape = RoundedCornerShape(25.dp),
-                        border = BorderStroke(
-                            color = Color(0XFF8c1c3a),
-                            width = 4.dp
-                        ),
-                        colors = ButtonDefaults.buttonColors(
-                            backgroundColor = Color(0XFFff235e),
-                            contentColor = Color(0XFF8c1c3a)
-                        ),
-                        elevation = ButtonDefaults.elevation(defaultElevation = 0.dp)
-                    ) {
-                        Text(
-                            "Ir para login",
-                            color = Color.White,
-                        )
-                    }
+                    Text(
+                        "Ir para login",
+                        color = Color.White,
+                    )
                 }
+
             }
         }
 

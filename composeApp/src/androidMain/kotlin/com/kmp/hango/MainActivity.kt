@@ -22,8 +22,8 @@ class MainActivity : ComponentActivity() {
 
     private fun hideSystemBars() {
         enableEdgeToEdge(
-            statusBarStyle = SystemBarStyle.light(
-                Color.TRANSPARENT, Color.TRANSPARENT
+            statusBarStyle = SystemBarStyle.dark(
+                Color.TRANSPARENT
             ),
             navigationBarStyle = SystemBarStyle.light(
                 Color.TRANSPARENT, Color.TRANSPARENT

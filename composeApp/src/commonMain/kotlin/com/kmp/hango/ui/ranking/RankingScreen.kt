@@ -55,6 +55,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import coil3.compose.AsyncImage
 import com.kmp.hango.components.CustomTitle
+import com.kmp.hango.components.LoadScreen
 import com.kmp.hango.constant.DEFAULT_BG_COLOR
 import com.kmp.hango.constant.DEFAULT_BG_COLOR_DARK
 import com.kmp.hango.model.User
@@ -81,18 +82,20 @@ fun RankingScreen() {
         verticalArrangement = Arrangement.Center
     ) {
         if (state.textMessage.isNotEmpty()) {
-            CustomTitle(state.textMessage, color = Color.White)
+            Image(
+                painterResource(Res.drawable.round_x_name),
+                contentDescription = "Logo round x name",
+                modifier = Modifier
+                    .height(56.dp)
+                    .fillMaxWidth()
+                    .padding(8.dp)
+            )
+            CustomTitle(state.textMessage, color = Color.White, fontSize = 18.sp)
         }
 
-        if (state.searching) {
-            Spacer(modifier = Modifier.height(10.dp))
-            CircularProgressIndicator(
-                modifier = Modifier.size(50.dp),
-                strokeWidth = 5.dp,
-                color = Color.White
-            )
+        if (state.load) {
+            LoadScreen()
         } else if (state.profiles.isNotEmpty()) {
-
             Crossfade(targetState = state.showRankingShare) { showRankingShare ->
 
                 if (!showRankingShare) {
@@ -137,7 +140,7 @@ fun RankingScreen() {
                         }
                     }
                 } else {
-                    Column (
+                    Column(
                         modifier = Modifier
                             .fillMaxSize(),
                         horizontalAlignment = Alignment.CenterHorizontally,
@@ -181,10 +184,12 @@ fun RankingScreen() {
                             Box(
                                 contentAlignment = Alignment.Center,
                                 modifier = Modifier
-                                    .border(BorderStroke(4.dp, Color.White), RoundedCornerShape(30.dp))
+                                    .border(
+                                        BorderStroke(4.dp, Color.White),
+                                        RoundedCornerShape(30.dp)
+                                    )
                                     .clip(RoundedCornerShape(30.dp))
-                                    .size(200.dp)
-                                ,
+                                    .size(200.dp),
                             ) {
                                 Image(
                                     painter = painterResource(Res.drawable.ic_coin),

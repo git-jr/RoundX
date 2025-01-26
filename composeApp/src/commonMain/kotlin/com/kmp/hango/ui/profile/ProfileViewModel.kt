@@ -37,7 +37,11 @@ class ProfileViewModel(
             _uiState.value = _uiState.value.copy(email = user.email.toString())
             loadInfos(user.uid)
         } ?: run {
-            _uiState.value = _uiState.value.copy(showGoToLogin = true, load = false)
+            _uiState.value = _uiState.value.copy(
+                showGoToLogin = true,
+                load = false,
+                error = "É necessário estar logado para acessar o perfil"
+            )
         }
     }
 

@@ -1,10 +1,8 @@
 package com.kmp.hango.ui.splash
 
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
@@ -22,11 +20,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.kmp.hango.components.LoadScreen
 import com.kmp.hango.constant.DEFAULT_BG_COLOR
-import com.kmp.hango.ui.login.LoginViewModel
-import hango.composeapp.generated.resources.Res
-import hango.composeapp.generated.resources.round_x_name
-import org.jetbrains.compose.resources.painterResource
+import com.kmp.hango.constant.DEFAULT_BG_COLOR_DARK
 import org.koin.compose.viewmodel.koinViewModel
 
 @Composable
@@ -35,7 +31,6 @@ fun SplashScreen(
     onNavigateInit: () -> Unit,
     onNavigateLogin: () -> Unit
 ) {
-
     val viewModel: SplashViewModel = koinViewModel()
     val state by viewModel.uiState.collectAsState()
 
@@ -55,21 +50,18 @@ fun SplashScreen(
     Column(
         modifier = modifier
             .background(Color(DEFAULT_BG_COLOR))
-            .fillMaxSize().padding(16.dp),
+            .fillMaxSize(),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
         if (state.loading) {
-            Box(modifier = Modifier.fillMaxSize()) {
-                Image(
-                    painter = painterResource(Res.drawable.round_x_name),
-                    contentDescription = "App Logo",
-                    modifier = Modifier.size(100.dp).align(Alignment.Center)
-                )
-            }
+            LoadScreen(
+                Modifier.background(Color(DEFAULT_BG_COLOR_DARK))
+                    .fillMaxSize()
+            )
         } else {
             Column(
-                modifier = Modifier.fillMaxSize(),
+                modifier = Modifier.fillMaxSize().padding(16.dp),
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.Center
             ) {

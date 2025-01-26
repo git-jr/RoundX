@@ -5,8 +5,8 @@ import com.kmp.hango.model.User
 
 data class RankingState(
     val profiles: List<User> = listOf(),
-    val searching: Boolean = true,
-    val textMessage: String = "Carregando",
+    val load: Boolean = true,
+    val textMessage: String = "",
     val shareMessage: String = "",
     val rankingMessage: String = "",
     val showSnackBar: Boolean = false,
