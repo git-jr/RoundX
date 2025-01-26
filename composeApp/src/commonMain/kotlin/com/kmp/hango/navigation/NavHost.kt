@@ -33,6 +33,7 @@ import com.kmp.hango.ui.login.LoginScreen
 import com.kmp.hango.ui.profile.ProfileScreen
 import com.kmp.hango.ui.ranking.RankingScreen
 import com.kmp.hango.ui.register.RegisterScreen
+import com.kmp.hango.ui.splash.SplashScreen
 import kotlinx.serialization.ExperimentalSerializationApi
 
 @OptIn(ExperimentalSerializationApi::class, ExperimentalSharedTransitionApi::class)
@@ -83,9 +84,17 @@ fun NavHost(
             SharedTransitionLayout {
                 androidx.navigation.compose.NavHost(
                     navController = navController,
-                    startDestination = Routes.Login,
+                    startDestination = Routes.Splash,
                     modifier = modifier,
                 ) {
+
+                    composable<Routes.Splash> {
+                        SplashScreen(
+                            onNavigateInit = { navController.navigate(Routes.Profile) },
+                            onNavigateLogin = { navController.navigate(Routes.Login) }
+                        )
+                    }
+
 
                     composable<Routes.Login> {
                         LoginScreen(

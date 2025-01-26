@@ -40,6 +40,7 @@ kotlin {
 
             // Ktor
             implementation(libs.ktor.client.okhttp)
+            implementation(libs.ktor.client.android)
 
             // Koin
             implementation(libs.koin.android)
@@ -57,7 +58,6 @@ kotlin {
             implementation(compose.components.uiToolingPreview)
             implementation(libs.androidx.lifecycle.viewmodel)
             implementation(libs.androidx.lifecycle.runtime.compose)
-            implementation(libs.kotlinx.serialization.json)
 
             // Navigation
             implementation(libs.navigation.compose)
@@ -69,6 +69,12 @@ kotlin {
             implementation(libs.coil.compose.core)
             implementation(libs.coil.compose)
             implementation(libs.coil)
+
+            // Ktor
+            implementation(libs.ktor.client.content.negotiation)
+            implementation(libs.ktor.client.core)
+            implementation(libs.kotlinx.coroutines.core)
+            implementation(libs.ktor.client.logging)
 
             // Ktor to coil
             implementation(libs.bundles.ktor.common)

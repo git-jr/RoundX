@@ -6,8 +6,6 @@ import androidx.datastore.preferences.core.booleanPreferencesKey
 import androidx.datastore.preferences.core.edit
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.lifecycle.viewmodel.compose.viewModel
-import com.kmp.hango.data.database.QuestionDao
 import com.kmp.hango.network.firebase.UserFireStore
 import dev.gitlive.firebase.Firebase
 import dev.gitlive.firebase.auth.FirebaseAuth
@@ -19,8 +17,7 @@ import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 
 class ProfileViewModel(
-    private val dataStore: DataStore<Preferences>,
-    private val dao: QuestionDao
+    private val dataStore: DataStore<Preferences>
 ) : ViewModel() {
 
     private val _uiState = MutableStateFlow(ProfileUiState())
@@ -30,21 +27,6 @@ class ProfileViewModel(
     private var userFirestore = UserFireStore()
 
     init {
-        viewModelScope.launch {
-//            dao.insert(
-//                com.kmp.hango.model.Question(
-//                    id = "1",
-//                    categoryId = "1",
-//                    content = "content",
-//                    image = "image",
-//                    correct = true
-//                )
-//            )
-
-//            dao.getAll().collect {
-//                println("Room funcionando: $it")
-//            }
-        }
         checkLogin()
         loadPreferences()
     }
@@ -61,7 +43,8 @@ class ProfileViewModel(
 
     private fun loadPreferences() {
         viewModelScope.launch {
-            val skipCountdown = dataStore.data.first()[booleanPreferencesKey("skipCountdown")] ?: false
+            val skipCountdown =
+                dataStore.data.first()[booleanPreferencesKey("skipCountdown")] ?: false
             _uiState.value = _uiState.value.copy(skipCountdown = skipCountdown)
         }
     }

@@ -2,6 +2,7 @@ package com.kmp.hango.ui.login
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.kmp.hango.data.QuestionService
 import dev.gitlive.firebase.Firebase
 import dev.gitlive.firebase.auth.FirebaseAuth
 import dev.gitlive.firebase.auth.auth
@@ -9,19 +10,29 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 
-class LoginViewModel : ViewModel() {
+class LoginViewModel(
+    private val questionService: QuestionService
+) : ViewModel() {
 
     private val _uiState = MutableStateFlow(LoginUiState())
     var uiState = _uiState.asStateFlow()
     private val firebaseAuth: FirebaseAuth = Firebase.auth
 
     init {
-        checkUserLogged()
+        downloadQuestions()
     }
 
-    private fun checkUserLogged() {
-        if (firebaseAuth.currentUser != null) {
-            _uiState.value = uiState.value.copy(goToInit = true)
+    private fun downloadQuestions() {
+        viewModelScope.launch {
+
+            try {
+                val questions = questionService.getAll()
+                _uiState.value = uiState.value.copy(questions = questions.map { it.toQuestion() })
+                println("questionsResponse success: $questions")
+            } catch (e: Exception) {
+                println("questionsResponse: error $e")
+                _uiState.value = uiState.value.copy(questions = emptyList())
+            }
         }
     }
 
