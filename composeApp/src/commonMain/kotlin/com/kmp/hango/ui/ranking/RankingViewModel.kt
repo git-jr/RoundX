@@ -28,8 +28,7 @@ class RankingViewModel(
 
     private fun checkLogin() {
         _uiState.value = _uiState.value.copy(
-            load = true,
-            textMessage = "Carregando"
+            load = true
         )
 
         if (auth.currentUser == null) {
