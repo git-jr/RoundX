@@ -59,7 +59,7 @@ class RegisterViewModel : ViewModel() {
 
     fun register() {
         val userName = uiState.value.userName
-        val email = uiState.value.email
+        val email = uiState.value.email.trim()
         val password = uiState.value.password
         val confirmPassword = uiState.value.confirmPassword
 
@@ -139,7 +139,7 @@ class RegisterViewModel : ViewModel() {
                 userFirestore.saveUser(
                     user = User(
                         id = user.uid,
-                        name = _uiState.value.email,
+                        name = _uiState.value.userName,
                         imageProfileUrl = imageUrlPath,
                         score = 0,
                     ),

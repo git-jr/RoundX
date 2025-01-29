@@ -94,4 +94,9 @@ class UserFireStore {
             onError()
         }
     }
+
+    suspend fun deleteUser(userId: String) {
+        val userRef = dbUsers.child(userId)
+        userRef.removeValue()
+    }
 }

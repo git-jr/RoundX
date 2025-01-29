@@ -96,6 +96,8 @@ class ProfileViewModel(
             showDeleteDialog(false)
             delay(1000)
             try {
+                val userId = firebaseAuth.currentUser?.uid
+                userId?.let { userFirestore.deleteUser(it) }
                 firebaseAuth.currentUser?.delete()
                 _uiState.value = _uiState.value.copy(goToLogin = true)
             } catch (e: Exception) {
