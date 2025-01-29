@@ -32,6 +32,10 @@
 - Compartilhe sua pontuação com seus amigos e veja quem é o mais inteligente!
 
 ## 🎨 Preview
+https://github.com/user-attachments/assets/d6904e9e-b5b8-419c-a80c-be4c7e42a5e5
+
+
+
 
 
 ## 📲 Baixe e teste o app
