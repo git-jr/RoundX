@@ -3,6 +3,13 @@
 
 **Round X** é um aplicativo Android e IOS desenvolvido usando Kotlin Multiplatform, publicado na [Google Play Store][Google-Play-Store] e [Apple Store][Apple-Store]. Esse projeto é um case de uso de como criar um App para Android e iPhone que usa o que há de mais moderno do KMP e do Compose Multiplatform. Já deixa uma estrela aí se curtir 🌟
 
+<h1 align="center">
+
+[<img src="https://github.com/user-attachments/assets/10d37f6d-95c4-42b0-b0aa-b774c541faf6" alt = "Acesse na Google Play Store" width="200">][Google-Play-Store]
+[<img src="https://github.com/user-attachments/assets/51e3e814-9788-42c0-a4e4-e4cadcd8770b" alt = "Acesse na Apple Store" width="200">][Apple-Store]
+
+</h1>
+
 
 💻 Tecnologias em uso no Android e IOS
 - [Kotlin Multiplatform][kotlin-multiplatform] - Código compartilhado entre Android e IOS
